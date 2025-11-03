@@ -1,0 +1,6 @@
+@Whey_HostAddress = http://localhost:5107
+
+GET {{Whey_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
