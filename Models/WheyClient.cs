@@ -10,13 +10,8 @@ public class WheyClient
 	[Required]
 	public required string PublicKey { get; set; }
 
-	[Required]
-	public required string ReleaseSignature { get; set; }
-
 	public string? Version { get; set; }
 	public string? Platform { get; set; }
-	public required string Nonce { get; set; }
-	public long TimeStamp { get; set; }
 
 	public required string ApiToken { get; set; }
 	public DateTime TokenExpiry { get; set; }
