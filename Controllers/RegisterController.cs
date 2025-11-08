@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using NSec.Cryptography;
+using PeterO.Cbor;
 using Whey.Data;
 using Whey.Models;
 
@@ -76,15 +78,40 @@ namespace Whey.Controllers
 			await _cache.RemoveAsync(key);
 
 			// verify release signature
+			// TODO: when registering a release, release signature should be retrieved from some cache/storage and compared to the release signature of the request.
 
 			// verify payload
 
-			return null!;
-		}
+			byte[] pkBytes = WebEncoders.Base64UrlDecode(request.PublicKey);
+			if (pkBytes.Length != 32)
+			{
+				return Unauthorized("invalid public key");
+			}
 
-		private bool WheyClientExists(Guid id)
-		{
-			return _context.Clients.Any(e => e.Id == id);
+			byte[] signature = WebEncoders.Base64UrlDecode(request.PayloadSignature);
+			if (signature.Length != 64)
+			{
+				return Unauthorized("invalid payload signature");
+			}
+
+			// build CBOR
+			var cbor = CBORObject.NewOrderedMap()
+				.Add("m", "POST")
+				.Add("p", "/register")
+				.Add("nonce", request.Nonce)
+				.Add("pk", request.PublicKey)
+				.Add("ver", request.Version)
+				.Add("plat", request.Platform)
+				.Add("purpose", "register:v1");
+			byte[] msg = cbor.EncodeToBytes(CBOREncodeOptions.DefaultCtap2Canonical);
+
+			var publicKey = PublicKey.Import(SignatureAlgorithm.Ed25519, pkBytes, KeyBlobFormat.RawPublicKey);
+			if (!SignatureAlgorithm.Ed25519.Verify(publicKey, msg, signature))
+			{
+				return Unauthorized("payload signature invalid");
+			}
+
+			return null!;
 		}
 	}
 }

@@ -20,8 +20,10 @@
 		  <PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+		<PackageReference Include="NSec.Cryptography" Version="25.4.0" />
 		<PackageReference Include="NSwag.AspNetCore" Version="14.6.2" />
 		<PackageReference Include="Octokit" Version="14.0.0" />
+		<PackageReference Include="PeterO.Cbor" Version="4.5.5" />
 	</ItemGroup>
 
 </Project>
