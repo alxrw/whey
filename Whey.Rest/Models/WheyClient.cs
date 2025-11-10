@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Numerics;
 
-namespace Whey.Models;
+namespace Whey.Rest.Models;
 // Whey client as determined by the public key
 public class WheyClient
 {

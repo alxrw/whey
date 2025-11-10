@@ -1,4 +1,4 @@
-namespace Whey.Models;
+namespace Whey.Rest.Models;
 
 public class RegisterRequest
 {

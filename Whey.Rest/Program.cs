@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Whey.Data;
+using Whey.Rest.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
