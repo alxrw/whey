@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Whey.Rest.Models;
+using Whey.Core.Models;
 
-namespace Whey.Rest.Data;
+namespace Whey.Core.Data;
 
 public class WheyContext : DbContext
 {
