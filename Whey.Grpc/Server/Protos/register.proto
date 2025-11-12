@@ -1,0 +1,30 @@
+syntax = "proto3";
+package register;
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "Whey.Grpc.Server";
+
+service RegistrationService {
+  rpc Challenge(ChallengeRequest) returns (ChallengeResponse);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+}
+
+message RegisterRequest {
+  string public_key = 1;
+  string payload_signature = 2;
+  string release_signature = 3;
+  string version = 4;
+  string platform = 5;
+  string nonce = 6;
+  google.protobuf.Timestamp time_stamp = 8;
+}
+
+message RegisterResponse {}
+
+message ChallengeRequest {}
+
+message ChallengeResponse {
+  string nonce = 1;
+  google.protobuf.Timestamp expires_at = 2;
+}
