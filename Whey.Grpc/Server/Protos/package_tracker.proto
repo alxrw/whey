@@ -1,0 +1,20 @@
+syntax = "proto3";
+package package_tracker;
+
+service PackageTrackerService {
+  rpc Track(TrackRequest) returns (TrackResponse);
+}
+
+message TrackRequest {
+  oneof source {
+    RepositoryReference repo = 1;
+    string link = 2;
+  }
+}
+
+message RepositoryReference {
+  string owner = 1;
+  string repo = 2;
+}
+
+message TrackResponse {}

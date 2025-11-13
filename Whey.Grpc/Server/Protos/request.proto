@@ -1,0 +1,13 @@
+syntax = "proto3";
+package request;
+
+import "google/protobuf/timestamp.proto";
+
+message RequestIntent {
+  bytes public_key = 1;
+  bytes nonce = 2;
+  bytes sha256 = 3;
+  string purpose = 4;
+  string rpc_method = 5;
+  google.protobuf.Timestamp time_stamp = 6;
+}

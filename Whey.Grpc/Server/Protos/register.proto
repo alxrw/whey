@@ -10,13 +10,29 @@ service RegistrationService {
   rpc Register(RegisterRequest) returns (RegisterResponse);
 }
 
+enum Platform {
+  PLATFORM_UNSPECIFIED = 0;
+  PLATFORM_LINUX = 1;
+  PLATFORM_WINDOWS = 2;
+  PLATFORM_DARWIN = 3;
+}
+
+message RegisterIntent {
+  bytes public_key = 1;
+  bytes challenge = 2;
+  string version = 3;
+  Platform platform = 4;
+  string purpose = 5;
+  string rpc_method = 6;
+}
+
 message RegisterRequest {
-  string public_key = 1;
-  string payload_signature = 2;
-  string release_signature = 3;
+  bytes public_key = 1;
+  bytes payload_signature = 2; // client signs over RegisterIntent w/ private key
+  bytes release_signature = 3;
   string version = 4;
-  string platform = 5;
-  string nonce = 6;
+  Platform platform = 5;
+  bytes nonce = 6;
   google.protobuf.Timestamp time_stamp = 8;
 }
 
