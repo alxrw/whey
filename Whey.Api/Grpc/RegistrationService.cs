@@ -4,10 +4,12 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.Caching.Distributed;
 using NSec.Cryptography;
-using Whey.Core.Data;
+using Whey.Data;
 using Whey.Core.Models;
+using Whey.Api.Converters;
+using Whey.Api.Proto;
 
-namespace Whey.Grpc.Server.Services;
+namespace Whey.Api.Grpc;
 
 // TODO: find a better name for this
 public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBase
@@ -63,7 +65,7 @@ public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBa
 	{
 		// check nonce
 		string key = $"register:nonce:{request.Nonce}";
-		byte[]? marker = await _cache.GetAsync(key, context.CancellationToken) ??
+		byte[]? _ = await _cache.GetAsync(key, context.CancellationToken) ??
 			throw new RpcException(new Status(StatusCode.Unauthenticated, "provided challenge is invalid"));
 
 		await _cache.RemoveAsync(key, context.CancellationToken);
@@ -89,23 +91,7 @@ public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBa
 			throw new RpcException(new Status(StatusCode.Unauthenticated, "could not determine intent"));
 		}
 
-		// TODO: put ts somewhere else
-		string platform = ((Func<Platform, string>)(p =>
-		{
-			if (request.Platform == Platform.Linux)
-			{
-				return "linux";
-			}
-			if (request.Platform == Platform.Windows)
-			{
-				return "windows";
-			}
-			if (request.Platform == Platform.Darwin)
-			{
-				return "darwin";
-			}
-			return "unspecified";
-		}))(request.Platform);
+		string platform = PlatformConverter.ConvertProtoToString(request.Platform);
 
 		const int TOKEN_EXPIRY = 30;
 		var registerTime = DateTime.UtcNow;

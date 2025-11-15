@@ -1,6 +1,0 @@
-@Whey.Rest_HostAddress = http://localhost:5291
-
-GET {{Whey.Rest_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

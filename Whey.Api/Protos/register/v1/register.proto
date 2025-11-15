@@ -1,9 +1,9 @@
 syntax = "proto3";
-package register;
+package register.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Whey.Grpc.Server";
+option csharp_namespace = "Whey.Api.Proto";
 
 service RegistrationService {
   rpc Challenge(ChallengeRequest) returns (ChallengeResponse);

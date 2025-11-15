@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whey.Rest", "Whey.Rest\Whey.Rest.csproj", "{9F1D9849-D0E6-4B63-9D67-D5DBC1981960}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whey.Core", "Whey.Core\Whey.Core.csproj", "{60F27BCF-0637-4B6D-A55E-845A883327B7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Whey.Grpc", "Whey.Grpc", "{68AE38F7-19A4-49BA-A7BA-D8DA9D31E3B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whey.Api", "Whey.Api\Whey.Api.csproj", "{DA546AE7-87E7-423E-A8F5-3BD7382CA81B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whey.Grpc.Server", "Whey.Grpc\Server\Whey.Grpc.Server.csproj", "{8B3C6C42-6A09-4770-A9F1-AA1F0BD7E8F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whey", "Whey\Whey.csproj", "{9F9B8396-40C6-455E-A423-DC60881DEDC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,8 +34,13 @@ Global
 		{8B3C6C42-6A09-4770-A9F1-AA1F0BD7E8F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B3C6C42-6A09-4770-A9F1-AA1F0BD7E8F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B3C6C42-6A09-4770-A9F1-AA1F0BD7E8F3}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{8B3C6C42-6A09-4770-A9F1-AA1F0BD7E8F3} = {68AE38F7-19A4-49BA-A7BA-D8DA9D31E3B3}
+		{DA546AE7-87E7-423E-A8F5-3BD7382CA81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA546AE7-87E7-423E-A8F5-3BD7382CA81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA546AE7-87E7-423E-A8F5-3BD7382CA81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA546AE7-87E7-423E-A8F5-3BD7382CA81B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F9B8396-40C6-455E-A423-DC60881DEDC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F9B8396-40C6-455E-A423-DC60881DEDC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F9B8396-40C6-455E-A423-DC60881DEDC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F9B8396-40C6-455E-A423-DC60881DEDC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

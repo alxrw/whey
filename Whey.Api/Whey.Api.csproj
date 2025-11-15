@@ -7,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Protobuf Include="Protos\*.proto" GrpcServices="Server" />
+		<Protobuf Include="Protos\**\*.proto" GrpcServices="Server" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -20,7 +20,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\Whey.Core\Whey.Core.csproj" />
+		<ProjectReference Include="..\Whey.Core\Whey.Core.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\Whey\Whey.csproj" />
+	</ItemGroup>
 </Project>
