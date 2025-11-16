@@ -1,9 +1,9 @@
-namespace Whey.Api.Converters;
+namespace Whey.Server.Converters;
 
 using CorePlatform = Whey.Core.Models.Platform;
-using ProtoPlatform = Whey.Api.Proto.Platform;
+using ProtoPlatform = Whey.Server.Proto.Platform;
 
-// convert Whey.Core.Models.Platform to a Whey.Api.Platform
+// convert Whey.Core.Models.Platform to a Whey.Server.Platform
 // also convert to a string
 public static class PlatformConverter
 {

@@ -16,6 +16,26 @@ public class Platform
 
 	public bool HasFlags(Platform flags) => (_value & flags._value) == flags._value;
 
+	public ICollection<Platform> GetFlags()
+	{
+		List<Platform> res = new(1 << 2);
+		Platform[] flags = [UNSPECIFIED, LINUX, WINDOWS, DARWIN];
+
+		foreach (Platform f in flags)
+		{
+			if ((this & f) == f && this != UNSPECIFIED)
+			{
+				res.Add(f);
+			}
+		}
+		if (res.Count == 0)
+		{
+			return [UNSPECIFIED];
+		}
+
+		return res;
+	}
+
 	public static Platform operator ^(Platform left, Platform right) => new(left._value ^ right._value);
 	public static Platform operator |(Platform left, Platform right) => new(left._value | right._value);
 	public static Platform operator &(Platform left, Platform right) => new(left._value & right._value);

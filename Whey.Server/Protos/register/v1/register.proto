@@ -3,7 +3,7 @@ package register.v1;
 
 import "google/protobuf/timestamp.proto";
 
-option csharp_namespace = "Whey.Api.Proto";
+option csharp_namespace = "Whey.Server.Proto";
 
 service RegistrationService {
   rpc Challenge(ChallengeRequest) returns (ChallengeResponse);

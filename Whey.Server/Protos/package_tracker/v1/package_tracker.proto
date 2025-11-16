@@ -1,7 +1,7 @@
 syntax = "proto3";
 package package_tracker.v1;
 
-option csharp_namespace = "Whey.Api.Proto";
+option csharp_namespace = "Whey.Server.Proto";
 
 service PackageTrackerService {
   rpc Track(TrackRequest) returns (TrackResponse);

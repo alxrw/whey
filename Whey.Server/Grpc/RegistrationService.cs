@@ -4,12 +4,12 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.Caching.Distributed;
 using NSec.Cryptography;
-using Whey.Data;
+using Whey.Infra.Data;
 using Whey.Core.Models;
-using Whey.Api.Converters;
-using Whey.Api.Proto;
+using Whey.Server.Converters;
+using Whey.Server.Proto;
 
-namespace Whey.Api.Grpc;
+namespace Whey.Server.Grpc;
 
 // TODO: find a better name for this
 public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBase
