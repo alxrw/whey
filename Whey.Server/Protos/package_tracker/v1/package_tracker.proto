@@ -4,19 +4,20 @@ package package_tracker.v1;
 option csharp_namespace = "Whey.Server.Proto";
 
 service PackageTrackerService {
-  rpc Track(TrackRequest) returns (TrackResponse);
+  rpc Track(TrackRequest) returns (TrackResponse); // begin tracking a repository
+  rpc Bump(BumpRequest) returns (BumpResponse);
 }
 
 message TrackRequest {
-  oneof source {
-    RepositoryReference repo = 1;
-    string link = 2;
-  }
+  string owner = 2;
+  string repo = 3;
 }
 
-message RepositoryReference {
+message TrackResponse {}
+
+message BumpRequest {
   string owner = 1;
   string repo = 2;
 }
 
-message TrackResponse {}
+message BumpResponse {}

@@ -17,13 +17,11 @@ enum Platform {
   PLATFORM_DARWIN = 3;
 }
 
-message RegisterIntent {
-  bytes public_key = 1;
-  bytes challenge = 2;
-  string version = 3;
-  Platform platform = 4;
-  string purpose = 5;
-  string rpc_method = 6;
+message ChallengeRequest {}
+
+message ChallengeResponse {
+  string nonce = 1;
+  google.protobuf.Timestamp expires_at = 2;
 }
 
 message RegisterRequest {
@@ -37,10 +35,3 @@ message RegisterRequest {
 }
 
 message RegisterResponse {}
-
-message ChallengeRequest {}
-
-message ChallengeResponse {
-  string nonce = 1;
-  google.protobuf.Timestamp expires_at = 2;
-}

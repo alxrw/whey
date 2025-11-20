@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Numerics;
 
 namespace Whey.Core.Models;
 // Whey client as determined by the public key

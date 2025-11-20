@@ -4,10 +4,7 @@ using Quartz;
 namespace Whey.Infra.Workers;
 
 using GhPackage = Octokit.Package;
-using GhRelease = Octokit.Release;
-
 using WheyPackage = Whey.Core.Models.Package;
-using WheyRelease = Whey.Core.Models.Release;
 
 public class SyncPackageJob : IJob
 {
@@ -16,14 +13,37 @@ public class SyncPackageJob : IJob
 	public async Task Execute(IJobExecutionContext context)
 	{
 		// TODO: change
-		if (context.RefireCount >= 3)
+		const int MAX_RETRIES = 3;
+		if (context.RefireCount >= MAX_RETRIES)
 		{
+			// TODO: error log
 			return;
 		}
 
-		GitHubClient client = (GitHubClient)context.MergedJobDataMap.Get("client");
-		WheyPackage package = (WheyPackage)context.MergedJobDataMap.Get("package");
+		GitHubClient gitHubClient = (GitHubClient)context.MergedJobDataMap.Get("gitHubClient");
+		WheyPackage package = (WheyPackage)context.MergedJobDataMap.Get("package"); // use DTO?
+		HttpClient downloadClient = (HttpClient)context.MergedJobDataMap.Get("downloadClient");
 
-		var releases = await client.Repository.Release.GetLatest(package.Owner, package.Repo);
+		var release = await gitHubClient.Repository.Release.GetLatest(package.Owner, package.Repo);
+
+		// TODO: abstract ts logic somewhere else
+		if (release.TagName != package.Version)
+		{
+			// new release
+			var assets = release.Assets;
+			foreach (ReleaseAsset asset in assets)
+			{
+				using var stream = downloadClient.GetStreamAsync(asset.BrowserDownloadUrl, context.CancellationToken);
+
+				var path = Path.Combine("~", "whey", "pkg", package.Owner, package.Repo, $"{release.Name}");
+				using var fs = new FileStream(path, System.IO.FileMode.OpenOrCreate);
+				await stream.Result.CopyToAsync(fs, context.CancellationToken);
+			}
+
+			// TODO: change ts when using DTOs
+			package.LastPolled = DateTime.UtcNow;
+			package.Version = release.TagName;
+		}
+
 	}
 }
