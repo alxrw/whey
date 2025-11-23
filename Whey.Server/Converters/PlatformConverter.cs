@@ -44,4 +44,21 @@ public static class PlatformConverter
 		}
 		return String.Empty;
 	}
+
+	public static CorePlatform ConvertStringToCore(string p)
+	{
+		if (p == STRING_LINUX)
+		{
+			return CorePlatform.LINUX;
+		}
+		if (p == STRING_WINDOWS)
+		{
+			return CorePlatform.WINDOWS;
+		}
+		if (p == STRING_DARWIN)
+		{
+			return CorePlatform.DARWIN;
+		}
+		return CorePlatform.UNSPECIFIED;
+	}
 }

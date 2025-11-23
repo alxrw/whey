@@ -8,10 +8,11 @@ using Whey.Infra.Data;
 using Whey.Core.Models;
 using Whey.Server.Converters;
 using Whey.Server.Proto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Whey.Server.Grpc;
 
-// TODO: find a better name for this
+[AllowAnonymous]
 public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBase
 {
 	private readonly WheyContext _context;

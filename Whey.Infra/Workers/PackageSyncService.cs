@@ -35,9 +35,19 @@ public class SyncPackageJob : IJob
 			{
 				using var stream = downloadClient.GetStreamAsync(asset.BrowserDownloadUrl, context.CancellationToken);
 
-				var path = Path.Combine("~", "whey", "pkg", package.Owner, package.Repo, $"{release.Name}");
+				string tempReleaseName = $"{release.Name}-{Guid.NewGuid()}";
+
+				// INFO: store on blob storage?
+				string path = Path.Combine("~", "whey", "pkg", package.Owner, package.Repo, $"{tempReleaseName}");
 				using var fs = new FileStream(path, System.IO.FileMode.OpenOrCreate);
-				await stream.Result.CopyToAsync(fs, context.CancellationToken);
+				try
+				{
+					await stream.Result.CopyToAsync(fs, context.CancellationToken);
+				}
+				catch (OperationCanceledException)
+				{
+					Directory.Delete(path);
+				}
 			}
 
 			// TODO: change ts when using DTOs

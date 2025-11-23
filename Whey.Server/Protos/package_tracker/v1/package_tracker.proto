@@ -9,8 +9,9 @@ service PackageTrackerService {
 }
 
 message TrackRequest {
-  string owner = 2;
-  string repo = 3;
+  string owner = 1;
+  string repo = 2;
+  string platform = 3;
 }
 
 message TrackResponse {}
@@ -18,6 +19,7 @@ message TrackResponse {}
 message BumpRequest {
   string owner = 1;
   string repo = 2;
+  string platform = 3;
 }
 
 message BumpResponse {}

@@ -24,6 +24,15 @@ message ChallengeResponse {
   google.protobuf.Timestamp expires_at = 2;
 }
 
+message RegisterIntent {
+  bytes public_key = 1;
+  bytes challenge = 2;
+  string version = 3;
+  Platform platform = 4;
+  string purpose = 5;
+  string rpc_method = 6;
+}
+
 message RegisterRequest {
   bytes public_key = 1;
   bytes payload_signature = 2; // client signs over RegisterIntent w/ private key
