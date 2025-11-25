@@ -2,7 +2,6 @@ using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Octokit;
-using Whey.Core.Models;
 using Whey.Infra.Data;
 using Whey.Server.Converters;
 using Whey.Server.Proto;
@@ -24,24 +23,44 @@ public class PackageTrackerServiceImpl : PackageTrackerService.PackageTrackerSer
 		_client = client;
 	}
 
-	public override async Task<TrackResponse> Track(TrackRequest request, ServerCallContext context)
+	public override async Task<EnsureTrackedResponse> EnsureTracked(EnsureTrackedRequest request, ServerCallContext context)
 	{
 		Release rel = await _client.Repository.Release.GetLatest(request.Owner, request.Repo);
-		WheyPackage package = new WheyPackage
+		WheyPackage package = new()
 		{
 			Owner = request.Owner,
 			Repo = request.Repo,
 			Version = rel.TagName,
 			SupportedPlatforms = PlatformConverter.ConvertStringToCore(request.Platform),
 		};
-		await _db.Packages.AddAsync(package);
-		return null!;
+		bool exists = await _db.Packages
+			.AnyAsync(p => p.Owner == request.Owner && p.Repo == request.Repo);
+
+		if (!exists)
+		{
+			_db.Packages.Add(package);
+
+			// TODO: put this elsewhere, maybe batch saves?
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateException)
+			{
+				// NO-OP
+			}
+		}
+
+		return new EnsureTrackedResponse();
 	}
 
-	public override async Task<BumpResponse> Bump(BumpRequest request, ServerCallContext context)
+	public override async Task<ReportInstallResponse> ReportInstall(ReportInstallRequest request, ServerCallContext context)
 	{
 		var pkg = await _db.Packages
 			.FirstOrDefaultAsync(p => p.Owner == request.Owner && p.Repo == request.Repo);
-		return null!;
+
+		// do something, increment download metrics
+
+		return new ReportInstallResponse();
 	}
 }

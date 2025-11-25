@@ -1,6 +1,6 @@
+using Whey.Infra.Extensions;
 using Whey.Server.Auth;
 using Whey.Server.Grpc;
-using Whey.Server.Proto;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +11,7 @@ builder.Services.AddGrpc(opts =>
 {
 	opts.Interceptors.Add<AuthenticationInterceptor>();
 });
+builder.Services.AddWheyInfra(builder.Configuration);
 
 var app = builder.Build();
 

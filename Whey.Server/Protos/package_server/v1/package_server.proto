@@ -1,0 +1,15 @@
+syntax = "proto3";
+package package_server.v1;
+
+option csharp_namespace = "Whey.Server.Proto";
+
+service PackageRetrieverService {
+  rpc GetPackage(GetPackageRequest) returns (GetPackageResponse);
+}
+
+message GetPackageRequest {
+  string owner = 1;
+  string repo = 2;
+}
+
+message GetPackageResponse {}

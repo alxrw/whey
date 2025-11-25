@@ -4,22 +4,22 @@ package package_tracker.v1;
 option csharp_namespace = "Whey.Server.Proto";
 
 service PackageTrackerService {
-  rpc Track(TrackRequest) returns (TrackResponse); // begin tracking a repository
-  rpc Bump(BumpRequest) returns (BumpResponse);
+  rpc EnsureTracked(EnsureTrackedRequest) returns (EnsureTrackedResponse); // begin tracking a repository
+  rpc ReportInstall(ReportInstallRequest) returns (ReportInstallResponse);
 }
 
-message TrackRequest {
+message EnsureTrackedRequest {
   string owner = 1;
   string repo = 2;
   string platform = 3;
 }
 
-message TrackResponse {}
+message EnsureTrackedResponse {}
 
-message BumpRequest {
+message ReportInstallRequest {
   string owner = 1;
   string repo = 2;
   string platform = 3;
 }
 
-message BumpResponse {}
+message ReportInstallResponse {}
