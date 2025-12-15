@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Whey.Core.Models;
+using Whey.Core.Models.Stats;
 
 namespace Whey.Infra.Data;
 
@@ -7,7 +8,7 @@ public class WheyContext : DbContext
 {
 	public DbSet<WheyClient> Clients { get; set; }
 	public DbSet<Package> Packages { get; set; } // tracked packages
-	public DbSet<PackageMetric> PackageMetrics { get; set; } // ??
+	public DbSet<PackageStatistics> PackageStats { get; set; }
 	public WheyContext(DbContextOptions<WheyContext> options) : base(options) { }
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,5 +20,18 @@ public class WheyContext : DbContext
 		modelBuilder.Entity<Package>()
 			.HasIndex(p => new { p.Owner, p.Repo })
 			.IsUnique();
+
+		modelBuilder.Entity<PackageStatistics>(stats =>
+		{
+			stats.OwnsOne(s => s.Installs, b =>
+			{
+				b.ToJson();
+			});
+
+			stats.OwnsOne(s => s.Updates, b =>
+			{
+				b.ToJson();
+			});
+		});
 	}
 }

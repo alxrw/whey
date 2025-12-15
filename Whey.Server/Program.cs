@@ -1,3 +1,4 @@
+using Quartz;
 using Whey.Infra.Extensions;
 using Whey.Server.Auth;
 using Whey.Server.Grpc;
