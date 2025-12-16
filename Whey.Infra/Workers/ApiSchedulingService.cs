@@ -25,7 +25,7 @@ public class ApiSchedulingService
 
 	public DateTimeOffset GetNextRun(Package pkg)
 	{
-		_db.PackageStats.Find(pkg.Id);
+		var stats = _db.PackageStats.Find(pkg.Id);
 
 		// WARNING: temporary
 		return DateTimeOffset.FromUnixTimeSeconds(67);

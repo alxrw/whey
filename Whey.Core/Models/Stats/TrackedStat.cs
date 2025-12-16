@@ -2,7 +2,7 @@ namespace Whey.Core.Models.Stats;
 
 public abstract class TrackedStat
 {
-	public SortedDictionary<DateTime, uint> History { get; init; } = [];
+	public SortedDictionary<DateTimeOffset, uint> History { get; init; } = [];
 	public long Count => GetCountWithinRange(History.First().Key, History.Last().Key);
 
 	public long GetCountWithinRange(DateTimeOffset start, DateTimeOffset end)
@@ -14,8 +14,8 @@ public abstract class TrackedStat
 
 	public void Track(uint amt = 1)
 	{
-		var now = DateTime.UtcNow;
-		var bucket = new DateTime(now.Year, now.Month, now.Day, now.Hour, 0, 0, DateTimeKind.Utc);
+		var now = DateTimeOffset.UtcNow;
+		var bucket = new DateTimeOffset(new DateTime(now.Year, now.Month, now.Day, now.Hour, 0, 0, DateTimeKind.Utc));
 
 		if (!History.ContainsKey(bucket))
 		{

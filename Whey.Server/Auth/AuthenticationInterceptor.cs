@@ -65,7 +65,7 @@ public class AuthenticationInterceptor : Interceptor
 			}
 
 			// guaranteed to not be null ?
-			string pubKeyString = pubKey!.ToString()!;
+			string pubKeyString = BitConverter.ToString(pubKey!);
 
 			// TODO: cache ts using IDistributedCache/Redis
 			var client = await _db.Clients

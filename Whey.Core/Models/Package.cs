@@ -10,9 +10,12 @@ public class Package
 	public required string Owner { get; init; }
 	public required string Repo { get; init; }
 	public required string Version { get; set; } // release tag name
-	public Dictionary<Platform, string>? DownloadPaths { get; set; } // binary paths relative to 
+
+	// INFO: should not be null but object constructor gets mad if it is
+	public required DateTimeOffset? LastReleased { get; set; } // if no release, then can't add to Whey.
+	public Dictionary<Platform, string>? DownloadPaths { get; set; } // binary paths
 
 	public Platform SupportedPlatforms { get; set; } = Platform.UNSPECIFIED;
 	public List<string> Dependencies { get; set; } = [];
-	public DateTime LastPolled { get; set; }
+	public DateTimeOffset LastPolled { get; set; }
 }

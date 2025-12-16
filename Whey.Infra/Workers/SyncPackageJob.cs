@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Octokit;
 using Quartz;
 
@@ -9,6 +10,12 @@ using WheyPackage = Whey.Core.Models.Package;
 public class SyncPackageJob : IJob
 {
 	public static readonly JobKey Key = new("sync-package");
+	public readonly ILogger _logger;
+
+	public SyncPackageJob(ILogger logger)
+	{
+		_logger = logger;
+	}
 
 	public async Task Execute(IJobExecutionContext context)
 	{
@@ -17,9 +24,10 @@ public class SyncPackageJob : IJob
 
 		try
 		{
+			// INFO: may not even run since it would catch anyway?
 			if (context.RefireCount >= MAX_RETRIES)
 			{
-				// TODO: error log
+				_logger.LogWarning("Job scheduled at {Date} cannot be run since MAX_RETRIES exceeded.", DateTime.UtcNow);
 				return;
 			}
 
@@ -40,7 +48,7 @@ public class SyncPackageJob : IJob
 
 					string tempReleaseName = $"{release.Name}-{Guid.NewGuid()}";
 
-					// INFO: store on blob storage?
+					// TODO: store on blob storage?
 					string path = Path.Combine("~", "whey", "pkg", package.Owner, package.Repo, $"{tempReleaseName}");
 					using var fs = new FileStream(path, System.IO.FileMode.OpenOrCreate);
 					try
@@ -55,17 +63,16 @@ public class SyncPackageJob : IJob
 
 				// TODO: change ts when using DTOs
 				// am i going to use DTOs?
-				package.LastPolled = DateTime.UtcNow;
+				package.LastPolled = DateTimeOffset.UtcNow;
 				package.Version = release.TagName;
 			}
 		}
-		catch (Exception)
+		catch (Exception e)
 		{
-
+			_logger.LogError("Could not run job. Trace: {Error}", e.ToString());
 		}
 		finally
 		{
-			// TODO: reschedule the job here
 			WheyPackage package = (WheyPackage)context.MergedJobDataMap.Get("package"); // use DTO?
 			ApiSchedulingService apiService = (ApiSchedulingService)context.MergedJobDataMap.Get("apiService");
 			DateTimeOffset nextRun = apiService.GetNextRun(package);

@@ -31,6 +31,7 @@ public class PackageTrackerServiceImpl : PackageTrackerService.PackageTrackerSer
 			Owner = request.Owner,
 			Repo = request.Repo,
 			Version = rel.TagName,
+			LastReleased = rel.PublishedAt,
 			SupportedPlatforms = PlatformConverter.ConvertStringToCore(request.Platform),
 		};
 		bool exists = await _db.Packages

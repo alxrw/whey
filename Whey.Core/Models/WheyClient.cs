@@ -13,6 +13,6 @@ public class WheyClient
 	public string? Version { get; set; }
 	public string? Platform { get; set; }
 
-	public DateTime TokenExpiry { get; set; }
-	public DateTime RegisteredAt { get; set; }
+	public DateTimeOffset TokenExpiry { get; set; }
+	public DateTimeOffset RegisteredAt { get; set; }
 }

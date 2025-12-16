@@ -33,7 +33,7 @@ public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBa
 		RandomNumberGenerator.Fill(bytes);
 		string nonce = bytes.ToString();
 
-		DateTime absExpiry = DateTime.UtcNow.Add(TimeSpan.FromMinutes(NONCE_EXPIRY));
+		DateTimeOffset absExpiry = DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(NONCE_EXPIRY));
 
 		var opts = new DistributedCacheEntryOptions
 		{
@@ -45,7 +45,7 @@ public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBa
 		return Task.FromResult(new ChallengeResponse
 		{
 			Nonce = nonce,
-			ExpiresAt = Timestamp.FromDateTime(absExpiry),
+			ExpiresAt = Timestamp.FromDateTimeOffset(absExpiry),
 		});
 	}
 
@@ -95,7 +95,7 @@ public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBa
 		string platform = PlatformConverter.ConvertProtoToString(request.Platform);
 
 		const int TOKEN_EXPIRY = 30;
-		var registerTime = DateTime.UtcNow;
+		var registerTime = DateTimeOffset.UtcNow;
 
 		WheyClient client = new()
 		{

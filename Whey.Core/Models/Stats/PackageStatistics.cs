@@ -13,6 +13,9 @@ public class PackageStatistics
 
 	public InstallStat Installs { get; set; } = new();
 	public UpdateStat Updates { get; set; } = new();
+
+	[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+	public long TotalInteractions { get; private set; }
 }
 
 public class InstallStat : TrackedStat { }

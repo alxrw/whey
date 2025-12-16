@@ -23,15 +23,16 @@ public class WheyContext : DbContext
 
 		modelBuilder.Entity<PackageStatistics>(stats =>
 		{
-			stats.OwnsOne(s => s.Installs, b =>
-			{
-				b.ToJson();
-			});
+			stats.OwnsOne(s => s.Installs, b => b.ToJson());
+			stats.OwnsOne(s => s.Updates, b => b.ToJson());
+			stats.Property(p => p.TotalInteractions)
+				.HasComputedColumnSql(
+					"COALESCE((SELECT SUM(value::int) FROM jsonb_each_text(\"Installs\"->'History')), 0) + " +
+					"COALESCE((SELECT SUM(value::int) FROM jsonb_each_text(\"Updates\"->'History')), 0)",
+					stored: true
+				);
 
-			stats.OwnsOne(s => s.Updates, b =>
-			{
-				b.ToJson();
-			});
+			stats.HasIndex(p => p.TotalInteractions);
 		});
 	}
 }
