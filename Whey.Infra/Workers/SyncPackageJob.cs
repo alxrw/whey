@@ -71,7 +71,7 @@ public class SyncPackageJob : IJob
 		{
 			_logger.LogError("Could not run job. Trace: {Error}", e.ToString());
 		}
-		finally
+		finally // even if the try fails, reschedule job anyway.
 		{
 			WheyPackage package = (WheyPackage)context.MergedJobDataMap.Get("package"); // use DTO?
 			ApiSchedulingService apiService = (ApiSchedulingService)context.MergedJobDataMap.Get("apiService");
