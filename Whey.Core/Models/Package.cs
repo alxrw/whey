@@ -13,6 +13,7 @@ public class Package
 
 	// INFO: should not be null but object constructor gets mad if it is
 	public required DateTimeOffset? LastReleased { get; set; } // if no release, then can't add to Whey.
+	public string? ETag { get; set; }
 	public Dictionary<Platform, string>? DownloadPaths { get; set; } // binary paths
 
 	public Platform SupportedPlatforms { get; set; } = Platform.UNSPECIFIED;

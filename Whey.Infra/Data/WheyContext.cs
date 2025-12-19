@@ -26,6 +26,7 @@ public class WheyContext : DbContext
 			stats.OwnsOne(s => s.Installs, b => b.ToJson());
 			stats.OwnsOne(s => s.Updates, b => b.ToJson());
 			stats.Property(p => p.TotalInteractions)
+				// adds Installs + Updates = TotalInteractions computed column
 				.HasComputedColumnSql(
 					"COALESCE((SELECT SUM(value::int) FROM jsonb_each_text(\"Installs\"->'History')), 0) + " +
 					"COALESCE((SELECT SUM(value::int) FROM jsonb_each_text(\"Updates\"->'History')), 0)",
