@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whey.Server", "Whey.Server\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whey.Infra", "Whey.Infra\Whey.Infra.csproj", "{58FD590C-8854-436D-BD5D-B4D45D75DEFE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whey.Tests", "Whey.Tests\Whey.Tests.csproj", "{F7A6CC14-E0E6-4F7D-B235-9B5AC63A7BED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,5 +52,9 @@ Global
 		{58FD590C-8854-436D-BD5D-B4D45D75DEFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58FD590C-8854-436D-BD5D-B4D45D75DEFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58FD590C-8854-436D-BD5D-B4D45D75DEFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7A6CC14-E0E6-4F7D-B235-9B5AC63A7BED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7A6CC14-E0E6-4F7D-B235-9B5AC63A7BED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7A6CC14-E0E6-4F7D-B235-9B5AC63A7BED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7A6CC14-E0E6-4F7D-B235-9B5AC63A7BED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
