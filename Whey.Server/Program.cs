@@ -1,18 +1,38 @@
-using Quartz;
+using Serilog;
 using Whey.Infra.Extensions;
+using Whey.Infra.Services;
 using Whey.Server.Auth;
 using Whey.Server.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// add logging
+Log.Logger = new LoggerConfiguration()
+	.MinimumLevel.Debug()
+	// TODO: change this to write to file
+	// or maybe do smth with azure vms?
+	.WriteTo.Console()
+	.CreateLogger();
+
+builder.Services.AddLogging(builder =>
+{
+	builder.ClearProviders();
+	builder.AddSerilog(dispose: true);
+});
+
+// add gRPC to DI
 builder.Services.AddTransient<AuthenticationInterceptor>();
 builder.Services.AddSingleton<PackageTrackerServiceImpl>();
 builder.Services.AddGrpc(opts =>
 {
 	opts.Interceptors.Add<AuthenticationInterceptor>();
 });
+
+// add infra services
 builder.Services.AddWheyInfra(builder.Configuration);
+builder.Services.AddTransient<IApiSchedulingService>();
+builder.Services.AddSingleton<IBinStorageService>();
+builder.Services.AddTransient<IPackageSyncService>();
 
 var app = builder.Build();
 

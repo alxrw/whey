@@ -2,11 +2,16 @@ using Microsoft.Extensions.Logging;
 using Whey.Core.Models;
 using Whey.Infra.Data;
 
-namespace Whey.Infra.Workers;
+namespace Whey.Infra.Services;
+
+public interface IApiSchedulingService
+{
+	public DateTimeOffset GetNextRun(Package pkg);
+}
 
 // Whenever a PackageSyncService worker runs, the ApiSchedulingService worker determines the next time
 // the PackageSyncService worker should run.
-public class ApiSchedulingService
+public class ApiSchedulingService : IApiSchedulingService
 {
 	// tier 1: every hour, release 2 weeks ago OR top 5% in downloads
 	// tier 2: every 6 hours, releases within 3 months OR top 25%
