@@ -13,6 +13,7 @@ public class BinStorageService : IBinStorageService
 {
 	public BlobServiceClient GetBinStorageServiceClient(string acctName)
 	{
+		// how is this even authenticating?
 		BlobServiceClient client = new(
 			new Uri($"https://{acctName}.blob.core.windows.net"),
 			new DefaultAzureCredential());
@@ -23,7 +24,7 @@ public class BinStorageService : IBinStorageService
 	public async Task UploadBinaryAsync(BlobContainerClient containerClient, string fileName, Stream fileStream)
 	{
 		BlobClient blobClient = containerClient.GetBlobClient(fileName);
-		await blobClient.UploadAsync(fileStream, true);
+		await blobClient.UploadAsync(fileStream, overwrite: true);
 		// up to caller to close the fileStream
 	}
 }

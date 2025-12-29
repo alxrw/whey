@@ -20,4 +20,3 @@ public class PackageStatistics
 
 public class InstallStat : TrackedStat { }
 public class UpdateStat : TrackedStat { }
-

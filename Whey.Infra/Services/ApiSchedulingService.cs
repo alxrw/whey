@@ -11,6 +11,8 @@ public interface IApiSchedulingService
 
 // Whenever a PackageSyncService worker runs, the ApiSchedulingService worker determines the next time
 // the PackageSyncService worker should run.
+
+// lowkey this should probably not be in here but w/e
 public class ApiSchedulingService : IApiSchedulingService
 {
 	// tier 1: every hour, release 2 weeks ago OR top 5% in downloads

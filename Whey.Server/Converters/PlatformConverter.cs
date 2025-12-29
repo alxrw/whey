@@ -7,21 +7,21 @@ using ProtoPlatform = Whey.Server.Proto.Platform;
 // also convert to a string
 public static class PlatformConverter
 {
-	private const string STRING_LINUX = "linux";
-	private const string STRING_WINDOWS = "windows";
-	private const string STRING_DARWIN = "darwin";
+	private const string STRING_Linux = "linux";
+	private const string STRING_Windows = "windows";
+	private const string STRING_Darwin = "darwin";
 
 	public static ProtoPlatform ConvertCoreToProto(CorePlatform p)
 	{
-		if (p == CorePlatform.LINUX)
+		if (p == CorePlatform.Linux)
 		{
 			return ProtoPlatform.Linux;
 		}
-		else if (p == CorePlatform.WINDOWS)
+		else if (p == CorePlatform.Windows)
 		{
 			return ProtoPlatform.Windows;
 		}
-		else if (p == CorePlatform.DARWIN)
+		else if (p == CorePlatform.Darwin)
 		{
 			return ProtoPlatform.Darwin;
 		}
@@ -32,33 +32,33 @@ public static class PlatformConverter
 	{
 		if (p == ProtoPlatform.Linux)
 		{
-			return STRING_LINUX;
+			return STRING_Linux;
 		}
 		if (p == ProtoPlatform.Windows)
 		{
-			return STRING_WINDOWS;
+			return STRING_Windows;
 		}
 		if (p == ProtoPlatform.Darwin)
 		{
-			return STRING_DARWIN;
+			return STRING_Darwin;
 		}
 		return String.Empty;
 	}
 
 	public static CorePlatform ConvertStringToCore(string p)
 	{
-		if (p == STRING_LINUX)
+		if (p == STRING_Linux)
 		{
-			return CorePlatform.LINUX;
+			return CorePlatform.Linux;
 		}
-		if (p == STRING_WINDOWS)
+		if (p == STRING_Windows)
 		{
-			return CorePlatform.WINDOWS;
+			return CorePlatform.Windows;
 		}
-		if (p == STRING_DARWIN)
+		if (p == STRING_Darwin)
 		{
-			return CorePlatform.DARWIN;
+			return CorePlatform.Darwin;
 		}
-		return CorePlatform.UNSPECIFIED;
+		return CorePlatform.Unspecified;
 	}
 }

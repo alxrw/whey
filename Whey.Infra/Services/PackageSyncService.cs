@@ -22,7 +22,6 @@ public class PackageSyncService
 	private readonly WheyContext _db;
 	private readonly IBinStorageService _binStorageService;
 
-
 	public PackageSyncService(ILogger<PackageSyncService> logger, IHttpClientFactory httpClientFactory, WheyContext db, IBinStorageService bsService)
 	{
 		_logger = logger;
@@ -83,23 +82,44 @@ public class PackageSyncService
 			// new release
 			var assets = release.Assets;
 
+			string? azureAcctName = Environment.GetEnvironmentVariable("AZURE_ACCOUNT_NAME") ??
+				throw new ArgumentNullException("could not find env var AZURE_ACCOUNT_NAME");
+
+			string? azureContainerName = Environment.GetEnvironmentVariable("WHEY_CONTAINER_NAME") ??
+				throw new ArgumentNullException("could not find env var WHEY_CONTAINER_NAME");
+
+
 			// should we be parallelizing downloads?
 			foreach (ReleaseAsset asset in assets)
 			{
-				using var stream = client.GetStreamAsync(asset.BrowserDownloadUrl);
-
 				string fileName = $"{package.Owner}/{package.Repo}/{asset.Name}";
+				BlobServiceClient blobClient = _binStorageService.GetBinStorageServiceClient(azureAcctName);
+				BlobContainerClient containerClient = blobClient.GetBlobContainerClient(azureContainerName);
 
-				// FIX: fetch account name from env vars
-				BlobServiceClient blobClient = _binStorageService.GetBinStorageServiceClient("example");
-
-				// FIX: fetch container name from env vars
-				BlobContainerClient containerClient = blobClient.GetBlobContainerClient("whey-pkg-container");
+				string tempPath = Path.Join(Path.GetTempPath(), asset.Name);
 
 				// TODO: make asset uploading atomic?
 				// either all assets are uploaded, or none at all.
 				// maybe use some sort of cleanup OR staging uploads
-				await _binStorageService.UploadBinaryAsync(containerClient, fileName, stream.Result);
+				//
+				// also make this concurrent/async in a different thread? maybe retry on fail?
+				try
+				{
+					using (var networkStream = await client.GetStreamAsync(asset.BrowserDownloadUrl))
+					using (var fileStream = File.Create(tempPath))
+					{
+						await networkStream.CopyToAsync(fileStream);
+					}
+
+					using (var uploadStream = File.OpenRead(tempPath))
+					{
+						await _binStorageService.UploadBinaryAsync(containerClient, fileName, uploadStream);
+					}
+				}
+				finally
+				{
+
+				}
 			}
 
 			package.Version = release.TagName;
@@ -109,5 +129,10 @@ public class PackageSyncService
 		package.LastPolled = DateTimeOffset.UtcNow;
 		// entity MUST be tracked.
 		await _db.SaveChangesAsync();
+	}
+
+	private static void GetBinaryType()
+	{
+
 	}
 }

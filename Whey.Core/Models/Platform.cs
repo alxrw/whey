@@ -2,10 +2,10 @@ namespace Whey.Core.Models;
 
 public class Platform
 {
-	public static readonly Platform UNSPECIFIED = new(0);
-	public static readonly Platform LINUX = new(1 << 0);
-	public static readonly Platform WINDOWS = new(1 << 1);
-	public static readonly Platform DARWIN = new(1 << 2);
+	public static readonly Platform Unspecified = new(0);
+	public static readonly Platform Linux = new(1 << 0);
+	public static readonly Platform Windows = new(1 << 1);
+	public static readonly Platform Darwin = new(1 << 2);
 
 	private readonly uint _value;
 
@@ -19,18 +19,18 @@ public class Platform
 	public ICollection<Platform> GetFlags()
 	{
 		List<Platform> res = new(1 << 2);
-		Platform[] flags = [UNSPECIFIED, LINUX, WINDOWS, DARWIN];
+		Platform[] flags = [Unspecified, Linux, Windows, Darwin];
 
 		foreach (Platform f in flags)
 		{
-			if ((this & f) == f && this != UNSPECIFIED)
+			if ((this & f) == f && this != Unspecified)
 			{
 				res.Add(f);
 			}
 		}
 		if (res.Count == 0)
 		{
-			return [UNSPECIFIED];
+			return [Unspecified];
 		}
 
 		return res;
