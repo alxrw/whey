@@ -4,14 +4,26 @@ using Whey.Core.Models;
 
 namespace Whey.Infra.Services;
 
-public interface IAssetMappingService { }
+public interface IAssetMappingService
+{
+	public IEnumerable<ReleaseAsset> SelectReleaseAsset(
+			IEnumerable<ReleaseAsset> assets,
+			Platform os,
+			ProcessorArchitecture arch,
+			bool strictMatchesOnly);
+}
 
-public class AssetMappingService
+public class AssetMappingService : IAssetMappingService
 {
 	// TODO: create method that uses SelectReleaseAsset in order to map all release assets to their respective platforms
 	// and store the results in Package.ReleaseAssets
+
 	// INFO: Method ported from parm's selectReleaseAsset function in internal/core/installer/release.go
-	public ReleaseAsset[] SelectReleaseAsset(ReleaseAsset[] assets, Platform os, ProcessorArchitecture arch)
+	public IEnumerable<ReleaseAsset> SelectReleaseAsset(
+			IEnumerable<ReleaseAsset> assets,
+			Platform os,
+			ProcessorArchitecture arch,
+			bool strictMatchesOnly = false)
 	{
 		var oses = new Dictionary<Platform, string[]>{
 			{ Platform.Windows, ["windows", "win64", "win32", "win"] },
@@ -44,10 +56,16 @@ public class AssetMappingService
 		const int osMatch = 11;
 		const int archMatch = 7;
 		const int prefMatch = 3;
+		const int minThresh = osMatch + archMatch;
 
 		foreach (var asset in assets)
 		{
-			var score = 0;
+			// NOTE: score set to 1 initially to combat a musl score mod
+			// ex. if minThresh is met, meaning that the asset met osMatch (11) + archMatch(7) minimum score (18)
+			// then if the asset uses musl, it would still be 18 (i.e. 1 + 11 + 7 - 1)
+			// then if asset doesn't use musl, then the score would be 19 (i.e. 1 + 11 + 7)
+			// there should be a better way to handle this score debuff (not scabale) but this should suffice for now.
+			var score = 1;
 			var name = asset.Name;
 
 			if (oses.TryGetValue(os, out var osTokens) && ContainsAny(name, osTokens))
@@ -79,7 +97,10 @@ public class AssetMappingService
 				}
 			}
 
-			scoredMatches.Add((asset, score));
+			if ((strictMatchesOnly && score >= minThresh) || !strictMatchesOnly)
+			{
+				scoredMatches.Add((asset, score));
+			}
 		}
 
 		var sortedMatches = scoredMatches.OrderByDescending(m => m.Score).ToList();

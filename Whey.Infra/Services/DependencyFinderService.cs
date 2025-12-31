@@ -3,11 +3,13 @@ using System.Text.RegularExpressions;
 
 namespace Whey.Infra.Services;
 
-public interface IDependencyFinderService { }
-
-public class DependencyFinderService
+public static partial class DependencyFinderService
 {
-	public string[] GetLibsLinux(string binPath)
+	[GeneratedRegex(@"^\s*NEEDED\s+(.+)$", RegexOptions.Multiline | RegexOptions.Compiled)]
+	private static partial Regex ObjdumpParsePattern();
+
+	// INFO: This method is a port of Parm's getMissingLibsLinux() function in pkg/deps/deps.go
+	public static string[] GetLibsLinux(string binPath)
 	{
 		var processInfo = new ProcessStartInfo
 		{
@@ -32,8 +34,7 @@ public class DependencyFinderService
 		}
 
 		var deps = new List<string>();
-		var pattern = new Regex(@"^\s*NEEDED\s+(.+)$", RegexOptions.Multiline);
-		var matches = pattern.Matches(output);
+		var matches = ObjdumpParsePattern().Matches(output);
 
 		foreach (Match match in matches)
 		{

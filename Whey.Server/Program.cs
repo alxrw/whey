@@ -30,9 +30,12 @@ builder.Services.AddGrpc(opts =>
 
 // add infra services
 builder.Services.AddWheyInfra(builder.Configuration);
-builder.Services.AddTransient<IApiSchedulingService>();
-builder.Services.AddSingleton<IBinStorageService>();
-builder.Services.AddTransient<IPackageSyncService>();
+builder.Services.AddTransient<IApiSchedulingService, ApiSchedulingService>();
+builder.Services.AddSingleton<IBinStorageService, BinStorageService>();
+builder.Services.AddTransient<IPackageSyncService, PackageSyncService>();
+builder.Services.AddTransient<IAssetMappingService, AssetMappingService>();
+
+// TODO: initialize all jobs here.
 
 var app = builder.Build();
 

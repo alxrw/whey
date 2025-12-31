@@ -2,6 +2,7 @@ using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Octokit;
+using Whey.Core.Models.Stats;
 using Whey.Infra.Data;
 using Whey.Server.Converters;
 using Whey.Server.Proto;
@@ -40,6 +41,17 @@ public class PackageTrackerServiceImpl : PackageTrackerService.PackageTrackerSer
 		if (!exists)
 		{
 			_db.Packages.Add(package);
+			package.Id = Guid.CreateVersion7();
+
+			PackageStatistics stats = new()
+			{
+				Id = package.Id, // change? maybe just generate a long?
+				PackageId = package.Id,
+				Installs = new(),
+				Updates = new(),
+			};
+			stats.Installs.Track();
+			_db.PackageStats.Add(stats);
 
 			// TODO: put this elsewhere, maybe batch saves?
 			try

@@ -1,17 +1,16 @@
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Whey.Infra.Data;
+using Whey.Infra.Extensions;
 using Whey.Infra.Services;
 
 namespace Whey.Infra.Workers;
 
 using WheyPackage = Whey.Core.Models.Package;
 
-// TODO: add jobs to queue if scheduled to run at the same exact time.
+[DisallowConcurrentExecution]
 public class SyncPackageJob : IJob
 {
-	public static readonly JobKey Key = new("sync-package"); // idk what ts is for icl
-
 	private readonly ILogger<SyncPackageJob> _logger;
 	private readonly WheyContext _db;
 	private readonly PackageSyncService _syncService;
@@ -26,7 +25,7 @@ public class SyncPackageJob : IJob
 	public async Task Execute(IJobExecutionContext context)
 	{
 		// TODO: change
-		const int MAX_RETRIES = 3;
+		const int MaxRetries = 3;
 
 		if (!context.MergedJobDataMap.TryGetGuid("package-id", out Guid packageId))
 		{
@@ -37,7 +36,7 @@ public class SyncPackageJob : IJob
 		try
 		{
 			// INFO: may not even run since it would catch anyway?
-			if (context.RefireCount >= MAX_RETRIES)
+			if (context.RefireCount >= MaxRetries)
 			{
 				_logger.LogWarning("Job scheduled at {Date} cannot be run since MAX_RETRIES exceeded.", DateTime.UtcNow);
 				return;
@@ -57,14 +56,27 @@ public class SyncPackageJob : IJob
 			var pkg = await _db.Packages.FindAsync(packageId, context.CancellationToken);
 			WheyPackage package = pkg!;
 
+			const int MinsJitter = 6;
+			var jitter = (int)TimeSpan.FromMinutes(MinsJitter).TotalSeconds;
+
 			ApiSchedulingService apiService = (ApiSchedulingService)context.MergedJobDataMap.Get("apiService");
-			DateTimeOffset nextRun = apiService.GetNextRun(package);
+			DateTimeOffset nextRun = apiService.GetNextRun(package)
+				.AddJitter(jitter);
+
+			var jobKey = new JobKey($"sync-{packageId}", "packages");
+
+			IJobDetail job = JobBuilder.Create<SyncPackageJob>()
+				.WithIdentity(jobKey)
+				.UsingJobData("package-id", packageId)
+				.Build();
+
 			ITrigger nextRunTrigger = TriggerBuilder.Create()
-				.ForJob(context.JobDetail)
+				.ForJob(jobKey)
+				.WithIdentity($"trigger-{packageId}", "packages")
 				.StartAt(nextRun)
 				.Build();
 
-			await context.Scheduler.ScheduleJob(nextRunTrigger);
+			await context.Scheduler.ScheduleJob(job, nextRunTrigger);
 		}
 	}
 }

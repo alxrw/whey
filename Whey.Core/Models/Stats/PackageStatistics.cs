@@ -6,7 +6,7 @@ namespace Whey.Core.Models.Stats;
 public class PackageStatistics
 {
 	[Key]
-	public long Id { get; set; }
+	public Guid Id { get; set; }
 
 	[ForeignKey("Package")]
 	public Guid PackageId { get; set; }

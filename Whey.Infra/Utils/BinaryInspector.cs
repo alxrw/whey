@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-
 namespace Whey.Infra.Utils;
 
 public enum BinaryType
@@ -13,9 +11,9 @@ public enum BinaryType
 public static class BinaryInspector
 {
 	private const int NumBytesToRead = 4;
-	private static byte[] MagicExe = [0x4D, 0x5A];
-	private static byte[] MagicElf = [0x7F, 0x45, 0x4C, 0x46]; // 52 byte min header, possibly unimportant?
-	private static byte[][] MagicMachos = [
+	private static readonly byte[] MagicExe = [0x4D, 0x5A];
+	private static readonly byte[] MagicElf = [0x7F, 0x45, 0x4C, 0x46]; // 52 byte min header, possibly unimportant?
+	private static readonly byte[][] MagicMachos = [
 		[0xFE, 0xED, 0xFA, 0xCE],
 		[0xFE, 0xED, 0xFA, 0xCF],
 		[0xCE, 0xFA, 0xED, 0xFE],
@@ -47,6 +45,31 @@ public static class BinaryInspector
 		}
 
 		return BinaryType.Unknown;
+	}
+
+	// walks directories until all binaries are found
+	// WARNING: recursion.
+	public static List<string> FindBinaries(string topDir)
+	{
+		var res = new List<string>();
+		var fileEntries = Directory.EnumerateFiles(topDir);
+		foreach (string path in fileEntries)
+		{
+			var type = GetBinaryExecutableType(path);
+			if (type != BinaryType.Unknown)
+			{
+				res.Add(path);
+			}
+		}
+
+		var dirEntries = Directory.EnumerateDirectories(topDir);
+		foreach (string path in dirEntries)
+		{
+			var subPaths = FindBinaries(path);
+			res.AddRange(subPaths);
+		}
+
+		return res;
 	}
 
 	private static byte[] GetBytes(Stream fileStream, int numBytes)

@@ -108,6 +108,7 @@ public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBa
 		};
 
 		await _context.Clients.AddAsync(client, context.CancellationToken);
+		await _context.SaveChangesAsync();
 
 		return new RegisterResponse();
 	}
