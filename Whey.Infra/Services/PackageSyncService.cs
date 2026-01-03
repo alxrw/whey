@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Reflection;
 using Azure.Storage.Blobs;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Octokit;
 using Whey.Core.Models;
@@ -17,7 +18,7 @@ using WheyPackage = Whey.Core.Models.Package;
 
 public interface IPackageSyncService
 {
-	public Task Sync(Guid packageId);
+	public Task Sync(WheyPackage pkg);
 }
 
 public class PackageSyncService : IPackageSyncService
@@ -53,17 +54,15 @@ public class PackageSyncService : IPackageSyncService
 		_assetMappingService = amService;
 	}
 
-	public async Task Sync(Guid packageId)
+	public async Task Sync(WheyPackage package)
 	{
-		WheyPackage? package = await _db.Packages.FindAsync(packageId);
-		if (package is null)
+		if (_db.Entry(package).State != EntityState.Detached)
 		{
-			_logger.LogError("Cannot find package with Id {id}", packageId);
+			_logger.LogError("Unable to sync package {Owner}/{Repo} since entry is untracked.", package.Owner, package.Repo);
 			return;
 		}
 		HttpClient client = _httpClientFactory.CreateClient();
 		HttpRequestMessage msg = new(HttpMethod.Get, $"https://api.github.com/repos/{package.Owner}/{package.Repo}/releases/latest");
-		// msg.Headers.UserAgent.Add(); // what??
 
 		if (!string.IsNullOrEmpty(package.ETag))
 		{

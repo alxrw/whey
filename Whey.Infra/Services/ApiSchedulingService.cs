@@ -1,11 +1,16 @@
 using Microsoft.Extensions.Logging;
+using Quartz;
+using Quartz.Impl;
 using Whey.Core.Models;
 using Whey.Infra.Data;
+using Whey.Infra.Extensions;
+using Whey.Infra.Workers;
 
 namespace Whey.Infra.Services;
 
 public interface IApiSchedulingService
 {
+	public (IJobDetail jobDetail, ITrigger trigger) GetNextScheduledJob(Package pkg);
 	public DateTimeOffset GetNextRun(Package pkg);
 }
 
@@ -31,6 +36,32 @@ public class ApiSchedulingService : IApiSchedulingService
 	{
 		_db = ctx;
 		_logger = logger;
+	}
+
+	// Gets next IJobDetail and ITrigger to schedule next job
+	// TODO: check if job exists?
+	public (IJobDetail jobDetail, ITrigger trigger) GetNextScheduledJob(Package pkg)
+	{
+		const int MinsJitter = 6;
+		var jitter = (int)TimeSpan.FromMinutes(MinsJitter).TotalSeconds;
+
+		DateTimeOffset nextRun = GetNextRun(pkg)
+			.AddJitter(jitter);
+
+		var jobKey = new JobKey($"sync-{pkg.Id}", "packages");
+
+		IJobDetail job = JobBuilder.Create<SyncPackageJob>()
+			.WithIdentity(jobKey)
+			.UsingJobData("package-id", pkg.Id)
+			.Build();
+
+		ITrigger nextRunTrigger = TriggerBuilder.Create()
+			.ForJob(jobKey)
+			.WithIdentity($"trigger-{pkg.Id}", "packages")
+			.StartAt(nextRun)
+			.Build();
+
+		return (job, nextRunTrigger);
 	}
 
 	public DateTimeOffset GetNextRun(Package pkg)

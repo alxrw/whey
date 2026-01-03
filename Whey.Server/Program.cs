@@ -1,6 +1,7 @@
 using Serilog;
 using Whey.Infra.Extensions;
 using Whey.Infra.Services;
+using Whey.Infra.Workers;
 using Whey.Server.Auth;
 using Whey.Server.Grpc;
 
@@ -35,7 +36,8 @@ builder.Services.AddSingleton<IBinStorageService, BinStorageService>();
 builder.Services.AddTransient<IPackageSyncService, PackageSyncService>();
 builder.Services.AddTransient<IAssetMappingService, AssetMappingService>();
 
-// TODO: initialize all jobs here.
+// initialize quartz jobs
+builder.Services.AddHostedService<JobInitializer>();
 
 var app = builder.Build();
 

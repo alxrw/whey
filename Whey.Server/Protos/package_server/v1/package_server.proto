@@ -12,4 +12,6 @@ message GetPackageRequest {
   string repo = 2;
 }
 
-message GetPackageResponse {}
+message GetPackageResponse {
+  string dl_link = 1;
+}

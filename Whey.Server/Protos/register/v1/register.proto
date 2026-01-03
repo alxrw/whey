@@ -11,10 +11,10 @@ service RegistrationService {
 }
 
 enum Platform {
-  PLATFORM_Unspecified = 0;
-  PLATFORM_Linux = 1;
-  PLATFORM_Windows = 2;
-  PLATFORM_Darwin = 3;
+  PLATFORM_UNSPECIFIED = 0;
+  PLATFORM_LINUX = 1;
+  PLATFORM_WINDOWS = 2;
+  PLATFORM_DARWIN = 3;
 }
 
 message ChallengeRequest {}

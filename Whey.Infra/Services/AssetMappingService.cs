@@ -10,14 +10,11 @@ public interface IAssetMappingService
 			IEnumerable<ReleaseAsset> assets,
 			Platform os,
 			ProcessorArchitecture arch,
-			bool strictMatchesOnly);
+			bool strictMatchesOnly = false);
 }
 
 public class AssetMappingService : IAssetMappingService
 {
-	// TODO: create method that uses SelectReleaseAsset in order to map all release assets to their respective platforms
-	// and store the results in Package.ReleaseAssets
-
 	// INFO: Method ported from parm's selectReleaseAsset function in internal/core/installer/release.go
 	public IEnumerable<ReleaseAsset> SelectReleaseAsset(
 			IEnumerable<ReleaseAsset> assets,

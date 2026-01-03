@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Quartz;
 using Whey.Infra.Data;
-using Whey.Infra.Extensions;
 using Whey.Infra.Services;
 
 namespace Whey.Infra.Workers;
@@ -24,12 +23,20 @@ public class SyncPackageJob : IJob
 
 	public async Task Execute(IJobExecutionContext context)
 	{
-		// TODO: change
+		// TODO: change, idk if this will even work ngl
 		const int MaxRetries = 3;
 
 		if (!context.MergedJobDataMap.TryGetGuid("package-id", out Guid packageId))
 		{
 			_logger.LogError("Job failed: missing package-id from context.");
+			return;
+		}
+
+		var pkg = await _db.Packages.FindAsync(packageId, context.CancellationToken);
+
+		if (pkg is null)
+		{
+			_logger.LogError("Cannot find package with Id {id}", packageId);
 			return;
 		}
 
@@ -42,7 +49,7 @@ public class SyncPackageJob : IJob
 				return;
 			}
 
-			await _syncService.Sync(packageId);
+			await _syncService.Sync(pkg);
 		}
 		catch (Exception e)
 		{
@@ -51,32 +58,10 @@ public class SyncPackageJob : IJob
 		}
 		finally // even if the try fails, reschedule job anyway.
 		{
-			// make compiler happy.
-			// TODO: should just change this later anyway to only have to fetch the package once per job instead of twice.
-			var pkg = await _db.Packages.FindAsync(packageId, context.CancellationToken);
-			WheyPackage package = pkg!;
-
-			const int MinsJitter = 6;
-			var jitter = (int)TimeSpan.FromMinutes(MinsJitter).TotalSeconds;
-
 			ApiSchedulingService apiService = (ApiSchedulingService)context.MergedJobDataMap.Get("apiService");
-			DateTimeOffset nextRun = apiService.GetNextRun(package)
-				.AddJitter(jitter);
+			var (jobDetail, trigger) = apiService.GetNextScheduledJob(pkg);
 
-			var jobKey = new JobKey($"sync-{packageId}", "packages");
-
-			IJobDetail job = JobBuilder.Create<SyncPackageJob>()
-				.WithIdentity(jobKey)
-				.UsingJobData("package-id", packageId)
-				.Build();
-
-			ITrigger nextRunTrigger = TriggerBuilder.Create()
-				.ForJob(jobKey)
-				.WithIdentity($"trigger-{packageId}", "packages")
-				.StartAt(nextRun)
-				.Build();
-
-			await context.Scheduler.ScheduleJob(job, nextRunTrigger);
+			await context.Scheduler.ScheduleJob(jobDetail, trigger);
 		}
 	}
 }

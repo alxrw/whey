@@ -67,12 +67,14 @@ public class PackageTrackerServiceImpl : PackageTrackerService.PackageTrackerSer
 		return new EnsureTrackedResponse();
 	}
 
+	// TODO: report updates
+
 	public override async Task<ReportInstallResponse> ReportInstall(ReportInstallRequest request, ServerCallContext context)
 	{
 		var pkg = await _db.Packages
 			.FirstOrDefaultAsync(p => p.Owner == request.Owner && p.Repo == request.Repo);
 
-		// do something, increment download metrics
+		// TODO: do something, increment download metrics
 
 		return new ReportInstallResponse();
 	}

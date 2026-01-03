@@ -13,7 +13,6 @@ public class BinStorageService : IBinStorageService
 {
 	public BlobServiceClient GetBinStorageServiceClient(string acctName)
 	{
-		// how is this even authenticating?
 		BlobServiceClient client = new(
 			new Uri($"https://{acctName}.blob.core.windows.net"),
 			new DefaultAzureCredential());
