@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using Google.Protobuf;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
@@ -8,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using NSec.Cryptography;
 using Whey.Infra.Data;
 
-namespace Whey.Server.Auth;
+namespace Whey.Server.Interceptors;
 
 public class AuthenticationInterceptor : Interceptor
 {
