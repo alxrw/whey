@@ -22,8 +22,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Whey.Core\Whey.Core.csproj" />
+		<ProjectReference Include="..\Whey.Infra\Whey.Infra.csproj" />
+		<ProjectReference Include="..\Whey.Server\Whey.Server.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AwesomeAssertions" />
+		<PackageReference Include="Grpc.Net.Client" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="Octokit" />
 		<PackageReference Include="xunit.v3" />
 		<PackageReference Include="xunit.runner.visualstudio" />
 	</ItemGroup>

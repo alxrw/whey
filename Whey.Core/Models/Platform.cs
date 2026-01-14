@@ -19,7 +19,7 @@ public class Platform
 	public ICollection<Platform> GetFlags()
 	{
 		List<Platform> res = new(1 << 2);
-		Platform[] flags = [Unspecified, Linux, Windows, Darwin];
+		Platform[] flags = [Linux, Windows, Darwin];
 
 		foreach (Platform f in flags)
 		{

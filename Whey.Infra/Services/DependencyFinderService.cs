@@ -6,7 +6,7 @@ namespace Whey.Infra.Services;
 public static partial class DependencyFinderService
 {
 	[GeneratedRegex(@"^\s*NEEDED\s+(.+)$", RegexOptions.Multiline | RegexOptions.Compiled)]
-	private static partial Regex ObjdumpParsePattern();
+	internal static partial Regex ObjdumpParsePattern();
 
 	// INFO: This method is a port of Parm's getMissingLibsLinux() function in pkg/deps/deps.go
 	public static string[] GetLibsLinux(string binPath)
@@ -33,6 +33,11 @@ public static partial class DependencyFinderService
 			return [];
 		}
 
+		return ParseObjdumpOutput(output);
+	}
+
+	internal static string[] ParseObjdumpOutput(string output)
+	{
 		var deps = new List<string>();
 		var matches = ObjdumpParsePattern().Matches(output);
 

@@ -45,8 +45,9 @@ public static class PlatformConverter
 		return String.Empty;
 	}
 
-	public static CorePlatform ConvertStringToCore(string p)
+	public static CorePlatform ConvertStringToCore(string platform)
 	{
+		string p = platform.ToLower();
 		if (p == STRING_Linux)
 		{
 			return CorePlatform.Linux;
