@@ -2,13 +2,11 @@ using Octokit;
 
 namespace Whey.Tests.Fakes;
 
-/// <summary>
-/// A minimal fake for testing that wraps around a real GitHubClient
-/// but intercepts specific calls we need to control in tests.
-/// </summary>
+// A minimal fake for testing that wraps around a real GitHubClient
+// but intercepts specific calls we need to control in tests.
 public class FakeGitHubClientWrapper
 {
-	private readonly Dictionary<(string Owner, string Repo), Release> _releases = new();
+	private readonly Dictionary<(string Owner, string Repo), Release> _releases = [];
 
 	public void SetLatestRelease(string owner, string repo, Release release)
 	{
@@ -20,19 +18,15 @@ public class FakeGitHubClientWrapper
 		return _releases.TryGetValue((owner, repo), out var release) ? release : null;
 	}
 
-	/// <summary>
-	/// Creates a GitHubClient that can be used for testing.
-	/// Note: For actual integration tests, we mock at a higher level.
-	/// </summary>
+	// Creates a GitHubClient that can be used for testing.
+	// NOTE: For actual integration tests, we mock at a higher level.
+	// maybe mock an HTTP client and hardcode responses?
 	public static GitHubClient CreateRealClient()
 	{
 		return new GitHubClient(new ProductHeaderValue("WheyTests"));
 	}
 }
 
-/// <summary>
-/// Creates mock Release objects for testing.
-/// </summary>
 public static class ReleaseFactory
 {
 	private static long _idCounter = 1;
@@ -46,11 +40,7 @@ public static class ReleaseFactory
 		publishedAt ??= DateTimeOffset.UtcNow;
 
 		// Use reflection to create Release since it has internal constructor
-		var release = (Release)Activator.CreateInstance(
-			typeof(Release),
-			System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance,
-			null,
-			[
+		var release = new Release(
 				"", // url
 				"", // htmlUrl
 				"", // assetsUrl
@@ -68,18 +58,14 @@ public static class ReleaseFactory
 				null, // author
 				"", // tarballUrl
 				"", // zipballUrl
-				assets ?? Array.Empty<ReleaseAsset>(), // assets
-				"" // discussionUrl
-			],
-			null)!;
+				assets ?? [] // assets
+			);
 
 		return release;
 	}
 }
 
-/// <summary>
 /// Creates mock ReleaseAsset objects for testing.
-/// </summary>
 public static class ReleaseAssetFactory
 {
 	private static int _idCounter = 1;

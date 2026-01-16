@@ -9,8 +9,7 @@ using Whey.Server.Proto;
 
 namespace Whey.Server.Grpc;
 
-using GhPackage = Octokit.Package;
-using WheyPackage = Whey.Core.Models.Package;
+using WheyPackage = Core.Models.Package;
 
 [Authorize]
 public class PackageTrackerServiceImpl : PackageTrackerService.PackageTrackerServiceBase

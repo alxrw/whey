@@ -1,8 +1,8 @@
 namespace Whey.Tests.TestData;
 
-/// <summary>
-/// Helper class to create binary test files with specific magic bytes.
-/// </summary>
+// TODO: maybe use an actual compiler to mock binary files instead of hardcoding them in and assuming they're right?
+// i.e. don't base the tests off of the actual code, but rather a real binary file
+// Helper class to create binary test files with specific magic bytes.
 public static class BinaryTestFiles
 {
 	// ELF magic bytes: 0x7F 'E' 'L' 'F'

@@ -33,7 +33,6 @@ public sealed class GrpcTestFixture : WebApplicationFactory<Program>
 			services.RemoveAll<GitHubClient>();
 			services.AddSingleton(new GitHubClient(new ProductHeaderValue("WheyTests")));
 
-			// Use memory distributed cache instead of Redis
 			services.AddDistributedMemoryCache();
 		});
 	}

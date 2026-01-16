@@ -73,6 +73,7 @@ public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBa
 
 		// check release signature
 		// TODO: implement release signatures. store them in Db?
+		// store them as a env var
 
 		// check payload signature
 

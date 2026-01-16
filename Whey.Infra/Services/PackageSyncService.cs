@@ -14,7 +14,7 @@ using Whey.Infra.Utils;
 
 namespace Whey.Infra.Services;
 
-using WheyPackage = Whey.Core.Models.Package;
+using WheyPackage = Core.Models.Package;
 
 public interface IPackageSyncService
 {

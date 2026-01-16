@@ -5,7 +5,7 @@ using Whey.Infra.Services;
 
 namespace Whey.Infra.Workers;
 
-using WheyPackage = Whey.Core.Models.Package;
+using WheyPackage = Core.Models.Package;
 
 [DisallowConcurrentExecution]
 public class SyncPackageJob : IJob
