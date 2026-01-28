@@ -6,6 +6,9 @@ using Whey.Infra.Workers;
 using Whey.Server.Interceptors;
 using Whey.Server.Grpc;
 using System.Threading.RateLimiting;
+using Octokit;
+using Whey.Infra.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Whey.Server;
 
@@ -27,6 +30,17 @@ public sealed partial class Program
 			builder.ClearProviders();
 			builder.AddSerilog(dispose: true);
 		});
+
+		// validate env vars and/or options
+		var binOpts = builder.Services.AddOptions<BinStorageServiceOptions>()
+			.Bind(builder.Configuration.GetSection("BinStorageService"))
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+
+		var ghOpts = builder.Services.AddOptions<GitHubClientOptions>()
+			.Bind(builder.Configuration.GetSection("Octokit"))
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
 
 		builder.Services.AddSingleton(sp =>
 		{
@@ -86,6 +100,18 @@ public sealed partial class Program
 
 		// initialize quartz jobs
 		builder.Services.AddHostedService<JobInitializer>();
+
+		builder.Services.AddSingleton<IGitHubClient>(sp =>
+		{
+			var opts = sp.GetRequiredService<IOptions<GitHubClientOptions>>().Value;
+			var header = new ProductHeaderValue(opts.UserAgent);
+
+			return new GitHubClient(header)
+			{
+				Credentials = new Credentials(opts.Token),
+			};
+		});
+		builder.Services.AddDistributedMemoryCache();
 
 		var app = builder.Build();
 

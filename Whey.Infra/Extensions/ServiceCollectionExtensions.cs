@@ -15,7 +15,11 @@ public static class ServiceCollectionExtensions
 		{
 			opts.UseNpgsql(connectionString, npgsqlOpts =>
 			{
-				// opts here
+				npgsqlOpts.EnableRetryOnFailure(
+					maxRetryCount: 5,
+					maxRetryDelay: TimeSpan.FromSeconds(30), // TODO: use exponential backoff?
+					errorCodesToAdd: null
+				);
 			});
 		});
 

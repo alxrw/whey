@@ -15,9 +15,9 @@ using WheyPackage = Core.Models.Package;
 public class PackageTrackerServiceImpl : PackageTrackerService.PackageTrackerServiceBase
 {
 	private readonly WheyContext _db;
-	private readonly GitHubClient _client;
+	private readonly IGitHubClient _client;
 
-	public PackageTrackerServiceImpl(WheyContext db, GitHubClient client)
+	public PackageTrackerServiceImpl(WheyContext db, IGitHubClient client)
 	{
 		_db = db;
 		_client = client;
