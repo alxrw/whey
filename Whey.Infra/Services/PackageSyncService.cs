@@ -115,7 +115,7 @@ public class PackageSyncService : IPackageSyncService
 			foreach (ReleaseAsset asset in assets)
 			{
 				string fileName = $"{package.Owner}/{package.Repo}/{asset.Name}";
-				BlobServiceClient blobClient = _binStorageService.GetBinStorageServiceClient(azureAcctName);
+				BlobServiceClient blobClient = _binStorageService.GetBinStorageServiceClient();
 				BlobContainerClient containerClient = blobClient.GetBlobContainerClient(azureContainerName);
 
 				string jobDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());

@@ -10,6 +10,7 @@ service PackageRetrieverService {
 message GetPackageRequest {
   string owner = 1;
   string repo = 2;
+  string platform = 3;
 }
 
 message GetPackageResponse {

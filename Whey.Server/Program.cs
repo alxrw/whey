@@ -74,9 +74,9 @@ public sealed partial class Program
 		builder.Services.AddTransient<AuthenticationInterceptor>();
 		builder.Services.AddTransient<RateLimiterInterceptor>();
 
-		builder.Services.AddSingleton<PackageTrackerServiceImpl>();
-		builder.Services.AddSingleton<RegistrationServiceImpl>();
-		builder.Services.AddSingleton<PackageRetrieverServiceImpl>();
+		builder.Services.AddTransient<PackageTrackerServiceImpl>();
+		builder.Services.AddTransient<RegistrationServiceImpl>();
+		builder.Services.AddTransient<PackageRetrieverServiceImpl>();
 
 		builder.Services.AddGrpc(opts =>
 		{

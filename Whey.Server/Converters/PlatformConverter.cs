@@ -28,6 +28,23 @@ public static class PlatformConverter
 		return ProtoPlatform.Unspecified;
 	}
 
+	public static CorePlatform ConvertProtoToCore(ProtoPlatform p)
+	{
+		if (p == ProtoPlatform.Linux)
+		{
+			return CorePlatform.Linux;
+		}
+		else if (p == ProtoPlatform.Windows)
+		{
+			return CorePlatform.Windows;
+		}
+		else if (p == ProtoPlatform.Darwin)
+		{
+			return CorePlatform.Darwin;
+		}
+		return CorePlatform.Unspecified;
+	}
+
 	public static string ConvertProtoToString(ProtoPlatform p)
 	{
 		if (p == ProtoPlatform.Linux)
