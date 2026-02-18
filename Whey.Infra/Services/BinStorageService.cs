@@ -1,6 +1,8 @@
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Sas;
+using Microsoft.Extensions.Options;
+using Whey.Infra.Configuration;
 
 namespace Whey.Infra.Services;
 
@@ -15,9 +17,9 @@ public class BinStorageService : IBinStorageService
 {
 	private readonly string _accountName;
 
-	public BinStorageService(string accountName)
+	public BinStorageService(IOptions<BinStorageServiceOptions> opts)
 	{
-		_accountName = accountName;
+		_accountName = opts.Value.AccountName;
 	}
 
 	public BlobServiceClient GetBinStorageServiceClient()

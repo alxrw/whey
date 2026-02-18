@@ -23,6 +23,9 @@ public class JobInitializer : BackgroundService
 	{
 		using var scope = _serviceProvider.CreateScope();
 		var db = scope.ServiceProvider.GetRequiredService<WheyContext>();
+
+		await db.Database.MigrateAsync(stoppingToken);
+
 		var schedulerFactory = scope.ServiceProvider.GetRequiredService<ISchedulerFactory>();
 		var apiSchedulingService = scope.ServiceProvider.GetRequiredService<IApiSchedulingService>();
 		var scheduler = await schedulerFactory.GetScheduler(stoppingToken);

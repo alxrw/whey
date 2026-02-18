@@ -12,11 +12,8 @@ public class PackageStatistics
 	public Guid PackageId { get; set; }
 
 	public InstallStat Installs { get; set; } = new();
-	public UpdateStat Updates { get; set; } = new();
 
-	[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-	public long TotalInteractions { get; private set; }
+	public long TotalInteractions { get; set; }
 }
 
 public class InstallStat : TrackedStat { }
-public class UpdateStat : TrackedStat { }

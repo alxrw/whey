@@ -47,7 +47,6 @@ public class PackageTrackerServiceImpl : PackageTrackerService.PackageTrackerSer
 				Id = package.Id, // change? maybe just generate a long?
 				PackageId = package.Id,
 				Installs = new(),
-				Updates = new(),
 			};
 			stats.Installs.Track();
 			_db.PackageStats.Add(stats);

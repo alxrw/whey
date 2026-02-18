@@ -130,15 +130,4 @@ public class TrackedStatTests
 
 		installStat.History.Values.First().Should().Be(8);
 	}
-
-	[Fact]
-	public void UpdateStat_InheritsBehavior()
-	{
-		var updateStat = new UpdateStat();
-
-		updateStat.Track(2);
-		updateStat.Track(4);
-
-		updateStat.History.Values.First().Should().Be(6);
-	}
 }

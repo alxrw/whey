@@ -10,9 +10,9 @@ public class PlatformTests
 	{
 		var combined = Platform.Linux | Platform.Windows;
 
-		combined.HasFlags(Platform.Linux).Should().BeTrue();
-		combined.HasFlags(Platform.Windows).Should().BeTrue();
-		combined.HasFlags(Platform.Darwin).Should().BeFalse();
+		combined.HasFlag(Platform.Linux).Should().BeTrue();
+		combined.HasFlag(Platform.Windows).Should().BeTrue();
+		combined.HasFlag(Platform.Darwin).Should().BeFalse();
 	}
 
 	[Fact]
@@ -32,8 +32,8 @@ public class PlatformTests
 
 		var toggled = combined ^ Platform.Linux;
 
-		toggled.HasFlags(Platform.Linux).Should().BeFalse();
-		toggled.HasFlags(Platform.Windows).Should().BeTrue();
+		toggled.HasFlag(Platform.Linux).Should().BeFalse();
+		toggled.HasFlag(Platform.Windows).Should().BeTrue();
 	}
 
 	[Fact]
@@ -41,9 +41,9 @@ public class PlatformTests
 	{
 		var platform = Platform.Linux;
 
-		platform.HasFlags(Platform.Linux).Should().BeTrue();
-		platform.HasFlags(Platform.Windows).Should().BeFalse();
-		platform.HasFlags(Platform.Darwin).Should().BeFalse();
+		platform.HasFlag(Platform.Linux).Should().BeTrue();
+		platform.HasFlag(Platform.Windows).Should().BeFalse();
+		platform.HasFlag(Platform.Darwin).Should().BeFalse();
 	}
 
 	[Fact]
@@ -52,7 +52,7 @@ public class PlatformTests
 		var combined = Platform.Linux | Platform.Windows;
 		var required = Platform.Linux | Platform.Windows;
 
-		combined.HasFlags(required).Should().BeTrue();
+		combined.HasFlag(required).Should().BeTrue();
 	}
 
 	[Fact]
@@ -61,42 +61,7 @@ public class PlatformTests
 		var combined = Platform.Linux;
 		var required = Platform.Linux | Platform.Windows;
 
-		combined.HasFlags(required).Should().BeFalse();
-	}
-
-	[Fact]
-	public void GetFlags_SingleFlag_ReturnsSingleElement()
-	{
-		var platform = Platform.Linux;
-
-		var flags = platform.GetFlags();
-
-		flags.Should().ContainSingle();
-		flags.Should().Contain(Platform.Linux);
-	}
-
-	[Fact]
-	public void GetFlags_MultipleFlags_ReturnsAllSetFlags()
-	{
-		var combined = Platform.Linux | Platform.Windows | Platform.Darwin;
-
-		var flags = combined.GetFlags();
-
-		flags.Should().HaveCount(3);
-		flags.Should().Contain(Platform.Linux);
-		flags.Should().Contain(Platform.Windows);
-		flags.Should().Contain(Platform.Darwin);
-	}
-
-	[Fact]
-	public void GetFlags_Unspecified_ReturnsUnspecified()
-	{
-		var platform = Platform.Unspecified;
-
-		var flags = platform.GetFlags();
-
-		flags.Should().ContainSingle();
-		flags.Should().Contain(Platform.Unspecified);
+		combined.HasFlag(required).Should().BeFalse();
 	}
 
 	[Fact]

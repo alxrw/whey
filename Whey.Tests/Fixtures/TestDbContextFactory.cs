@@ -46,7 +46,6 @@ public class TestWheyContext : WheyContext
 		modelBuilder.Entity<PackageStatistics>(stats =>
 		{
 			stats.OwnsOne(s => s.Installs);
-			stats.OwnsOne(s => s.Updates);
 			// Skip TotalInteractions computed column - it's PostgreSQL-specific
 			stats.Ignore(p => p.TotalInteractions);
 		});

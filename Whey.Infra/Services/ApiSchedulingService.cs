@@ -32,7 +32,7 @@ public class ApiSchedulingService : IApiSchedulingService
 	private readonly WheyContext _db;
 	private readonly ILogger _logger;
 
-	public ApiSchedulingService(WheyContext ctx, ILogger logger)
+	public ApiSchedulingService(WheyContext ctx, ILogger<ApiSchedulingService> logger)
 	{
 		_db = ctx;
 		_logger = logger;

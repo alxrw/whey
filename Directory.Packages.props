@@ -9,6 +9,7 @@
 		<PackageVersion Include="Azure.Identity" Version="1.17.1" />
 		<PackageVersion Include="Azure.Storage.Blobs" Version="12.26.0" />
 		<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10" />
 		<PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.10" />
 		<PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
 		<PackageVersion Include="Octokit" Version="14.0.0" />

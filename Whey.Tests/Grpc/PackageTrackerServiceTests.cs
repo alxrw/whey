@@ -43,7 +43,6 @@ public class PackageTrackerServiceTests
 			Id = Guid.CreateVersion7(),
 			PackageId = Guid.CreateVersion7(),
 			Installs = new Core.Models.Stats.InstallStat(),
-			Updates = new Core.Models.Stats.UpdateStat(),
 		};
 
 		stats.Installs.Track();

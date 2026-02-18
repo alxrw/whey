@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Whey.Core.Models;
 using Whey.Core.Models.Stats;
@@ -17,20 +18,22 @@ public class WheyContext : DbContext
 			.HasIndex(c => c.PublicKey)
 			.IsUnique();
 
-		modelBuilder.Entity<Package>()
-			.HasIndex(p => new { p.Owner, p.Repo })
-			.IsUnique();
+		modelBuilder.Entity<Package>(entity =>
+		{
+			entity.HasIndex(p => new { p.Owner, p.Repo }).IsUnique();
+
+			entity.Property(p => p.Dependencies).HasColumnType("jsonb");
+			entity.Property(p => p.ReleaseAssets).HasColumnType("jsonb");
+			entity.Property(p => p.SupportedPlatforms).HasColumnType("integer");
+		});
 
 		modelBuilder.Entity<PackageStatistics>(stats =>
 		{
-			stats.OwnsOne(s => s.Installs, b => b.ToJson());
-			stats.OwnsOne(s => s.Updates, b => b.ToJson());
-			stats.Property(p => p.TotalInteractions)
-				// adds Installs + Updates = TotalInteractions computed column
-				.HasComputedColumnSql(
-					"COALESCE((SELECT SUM(value::int) FROM jsonb_each_text(\"Installs\"->'History')), 0) + " +
-					"COALESCE((SELECT SUM(value::int) FROM jsonb_each_text(\"Updates\"->'History')), 0)",
-					stored: true
+			stats.Property(s => s.Installs)
+				.HasColumnType("jsonb")
+				.HasConversion(
+					v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+					v => JsonSerializer.Deserialize<InstallStat>(v, (JsonSerializerOptions?)null)!
 				);
 
 			stats.HasIndex(p => p.TotalInteractions);

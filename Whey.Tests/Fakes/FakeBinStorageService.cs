@@ -7,7 +7,7 @@ public class FakeBinStorageService : IBinStorageService
 {
 	public List<(string Container, string FileName)> UploadedFiles { get; } = [];
 
-	public BlobServiceClient GetBinStorageServiceClient(string acctName)
+	public BlobServiceClient GetBinStorageServiceClient()
 	{
 		// Return a fake client - won't be used in tests since UploadBinaryAsync is overridden
 		// In real usage this would throw, but our tests won't call the actual Azure methods
@@ -18,5 +18,10 @@ public class FakeBinStorageService : IBinStorageService
 	{
 		UploadedFiles.Add((containerClient.Name, fileName));
 		return Task.CompletedTask;
+	}
+
+	public Uri GenerateBlobSasUri(string containerName, string blobPath, TimeSpan validFor)
+	{
+		return new Uri("uri");
 	}
 }
