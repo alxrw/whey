@@ -83,6 +83,7 @@ public sealed partial class Program
 			opts.Interceptors.Add<AuthenticationInterceptor>();
 			opts.Interceptors.Add<RateLimiterInterceptor>();
 		});
+		builder.Services.AddGrpcReflection();
 
 		// add infra services
 		builder.Services.AddQuartz();
@@ -120,6 +121,9 @@ public sealed partial class Program
 		app.MapGrpcService<PackageTrackerServiceImpl>().RequireAuthorization();
 		app.MapGrpcService<PackageRetrieverServiceImpl>();
 		app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client. To learn how to create a client, visit: https://go.microsoft.com/fwlink/?linkid=2086909");
+
+		// WARNING: CHANGE THIS FOR PROD
+		app.MapGrpcReflectionService();
 
 		app.Run();
 	}
