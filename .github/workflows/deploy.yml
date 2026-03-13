@@ -16,6 +16,8 @@ jobs:
         key: ${{ secrets.AZURE_VM_SSH_KEY }}
         script: |
           cd ~/whey
-          git pull
+          git fetch origin master
+          git checkout master
+          git reset --hard origin/master
           docker compose down
           docker compose up --build -d
