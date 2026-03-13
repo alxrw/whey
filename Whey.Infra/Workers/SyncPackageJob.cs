@@ -10,58 +10,58 @@ using WheyPackage = Core.Models.Package;
 [DisallowConcurrentExecution]
 public class SyncPackageJob : IJob
 {
-	private readonly ILogger<SyncPackageJob> _logger;
-	private readonly WheyContext _db;
-	private readonly PackageSyncService _syncService;
+    private readonly ILogger<SyncPackageJob> _logger;
+    private readonly WheyContext _db;
+    private readonly PackageSyncService _syncService;
 
-	public SyncPackageJob(ILogger<SyncPackageJob> logger, WheyContext db, PackageSyncService syncService)
-	{
-		_logger = logger;
-		_db = db;
-		_syncService = syncService;
-	}
+    public SyncPackageJob(ILogger<SyncPackageJob> logger, WheyContext db, PackageSyncService syncService)
+    {
+        _logger = logger;
+        _db = db;
+        _syncService = syncService;
+    }
 
-	public async Task Execute(IJobExecutionContext context)
-	{
-		// TODO: change, idk if this will even work ngl
-		const int MaxRetries = 3;
+    public async Task Execute(IJobExecutionContext context)
+    {
+        // TODO: change, idk if this will even work ngl
+        const int MaxRetries = 3;
 
-		if (!context.MergedJobDataMap.TryGetGuid("package-id", out Guid packageId))
-		{
-			_logger.LogError("Job failed: missing package-id from context.");
-			return;
-		}
+        if (!context.MergedJobDataMap.TryGetGuid("package-id", out Guid packageId))
+        {
+            _logger.LogError("Job failed: missing package-id from context.");
+            return;
+        }
 
-		var pkg = await _db.Packages.FindAsync(packageId, context.CancellationToken);
+        var pkg = await _db.Packages.FindAsync(packageId, context.CancellationToken);
 
-		if (pkg is null)
-		{
-			_logger.LogError("Cannot find package with Id {id}", packageId);
-			return;
-		}
+        if (pkg is null)
+        {
+            _logger.LogError("Cannot find package with Id {id}", packageId);
+            return;
+        }
 
-		try
-		{
-			// INFO: may not even run since it would catch anyway?
-			if (context.RefireCount >= MaxRetries)
-			{
-				_logger.LogWarning("Job scheduled at {Date} cannot be run since MAX_RETRIES exceeded.", DateTime.UtcNow);
-				return;
-			}
+        try
+        {
+            // INFO: may not even run since it would catch anyway?
+            if (context.RefireCount >= MaxRetries)
+            {
+                _logger.LogWarning("Job scheduled at {Date} cannot be run since MAX_RETRIES exceeded.", DateTime.UtcNow);
+                return;
+            }
 
-			await _syncService.Sync(pkg);
-		}
-		catch (Exception e)
-		{
-			_logger.LogError("Could not run job. Trace: {Error}", e.ToString());
-			throw;
-		}
-		finally // even if the try fails, reschedule job anyway.
-		{
-			ApiSchedulingService apiService = (ApiSchedulingService)context.MergedJobDataMap.Get("apiService");
-			var (jobDetail, trigger) = apiService.GetNextScheduledJob(pkg);
+            await _syncService.Sync(pkg);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("Could not run job. Trace: {Error}", e.ToString());
+            throw;
+        }
+        finally // even if the try fails, reschedule job anyway.
+        {
+            ApiSchedulingService apiService = (ApiSchedulingService)context.MergedJobDataMap.Get("apiService");
+            var (jobDetail, trigger) = apiService.GetNextScheduledJob(pkg);
 
-			await context.Scheduler.ScheduleJob(jobDetail, trigger);
-		}
-	}
+            await context.Scheduler.ScheduleJob(jobDetail, trigger);
+        }
+    }
 }

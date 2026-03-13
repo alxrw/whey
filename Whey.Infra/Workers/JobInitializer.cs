@@ -10,53 +10,53 @@ namespace Whey.Infra.Workers;
 
 public class JobInitializer : BackgroundService
 {
-	private readonly IServiceProvider _serviceProvider;
-	private readonly ILogger<JobInitializer> _logger;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<JobInitializer> _logger;
 
-	public JobInitializer(IServiceProvider serviceProvider, ILogger<JobInitializer> logger)
-	{
-		_serviceProvider = serviceProvider;
-		_logger = logger;
-	}
+    public JobInitializer(IServiceProvider serviceProvider, ILogger<JobInitializer> logger)
+    {
+        _serviceProvider = serviceProvider;
+        _logger = logger;
+    }
 
-	protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-	{
-		using var scope = _serviceProvider.CreateScope();
-		var db = scope.ServiceProvider.GetRequiredService<WheyContext>();
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<WheyContext>();
 
-		await db.Database.MigrateAsync(stoppingToken);
+        await db.Database.MigrateAsync(stoppingToken);
 
-		var schedulerFactory = scope.ServiceProvider.GetRequiredService<ISchedulerFactory>();
-		var apiSchedulingService = scope.ServiceProvider.GetRequiredService<IApiSchedulingService>();
-		var scheduler = await schedulerFactory.GetScheduler(stoppingToken);
+        var schedulerFactory = scope.ServiceProvider.GetRequiredService<ISchedulerFactory>();
+        var apiSchedulingService = scope.ServiceProvider.GetRequiredService<IApiSchedulingService>();
+        var scheduler = await schedulerFactory.GetScheduler(stoppingToken);
 
-		const int BatchSize = 100;
-		Guid? lastId = null;
+        const int BatchSize = 100;
+        Guid? lastId = null;
 
-		while (!stoppingToken.IsCancellationRequested)
-		{
-			var query = db.Packages.AsNoTracking().OrderBy(p => p.Id).AsQueryable();
-			if (lastId.HasValue)
-			{
-				query = query.Where(p => p.Id > lastId.Value);
-			}
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            var query = db.Packages.AsNoTracking().OrderBy(p => p.Id).AsQueryable();
+            if (lastId.HasValue)
+            {
+                query = query.Where(p => p.Id > lastId.Value);
+            }
 
-			var batch = await query.Take(BatchSize).ToListAsync(stoppingToken);
+            var batch = await query.Take(BatchSize).ToListAsync(stoppingToken);
 
-			if (batch.Count == 0)
-			{
-				break;
-			}
+            if (batch.Count == 0)
+            {
+                break;
+            }
 
-			foreach (var pkg in batch)
-			{
-				lastId = pkg.Id;
-				var (jobDetail, trigger) = apiSchedulingService.GetNextScheduledJob(pkg);
-				if (jobDetail != null && trigger != null)
-				{
-					await scheduler.ScheduleJob(jobDetail, trigger, stoppingToken);
-				}
-			}
-		}
-	}
+            foreach (var pkg in batch)
+            {
+                lastId = pkg.Id;
+                var (jobDetail, trigger) = apiSchedulingService.GetNextScheduledJob(pkg);
+                if (jobDetail != null && trigger != null)
+                {
+                    await scheduler.ScheduleJob(jobDetail, trigger, stoppingToken);
+                }
+            }
+        }
+    }
 }

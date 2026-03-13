@@ -1,6 +1,6 @@
 # Whey
 
-Whey is a backend registry service for [Parm](https://github.com/yhoundz/parm). It currently does the following:
+Whey is a backend registry service for [Parm](https://github.com/alxrw/parm). It currently does the following:
 - Acts as a mirror for Parm clients to install packages from Whey instead of GitHub
 - Tracks install statistics/analytics for repositories
 - Pre-computes client-side operations such as dependency finding and release asset selection.

@@ -1,0 +1,21 @@
+name: deploy
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to Azure VM
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.AZURE_VM_HOST }}
+        username: ${{ secrets.AZURE_VM_USERNAME }}
+        key: ${{ secrets.AZURE_VM_SSH_KEY }}
+        script: |
+          cd ~/whey
+          git pull
+          docker compose down
+          docker compose up --build -d

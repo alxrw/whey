@@ -14,66 +14,66 @@ using WheyPackage = Core.Models.Package;
 [Authorize]
 public class PackageTrackerServiceImpl : PackageTrackerService.PackageTrackerServiceBase
 {
-	private readonly WheyContext _db;
-	private readonly IGitHubClient _client;
+    private readonly WheyContext _db;
+    private readonly IGitHubClient _client;
 
-	public PackageTrackerServiceImpl(WheyContext db, IGitHubClient client)
-	{
-		_db = db;
-		_client = client;
-	}
+    public PackageTrackerServiceImpl(WheyContext db, IGitHubClient client)
+    {
+        _db = db;
+        _client = client;
+    }
 
-	public override async Task<EnsureTrackedResponse> EnsureTracked(EnsureTrackedRequest request, ServerCallContext context)
-	{
-		Release rel = await _client.Repository.Release.GetLatest(request.Owner, request.Repo);
-		WheyPackage package = new()
-		{
-			Owner = request.Owner,
-			Repo = request.Repo,
-			Version = rel.TagName,
-			LastReleased = rel.PublishedAt,
-			SupportedPlatforms = PlatformConverter.ConvertStringToCore(request.Platform),
-		};
-		bool exists = await _db.Packages
-			.AnyAsync(p => p.Owner == request.Owner && p.Repo == request.Repo);
+    public override async Task<EnsureTrackedResponse> EnsureTracked(EnsureTrackedRequest request, ServerCallContext context)
+    {
+        Release rel = await _client.Repository.Release.GetLatest(request.Owner, request.Repo);
+        WheyPackage package = new()
+        {
+            Owner = request.Owner,
+            Repo = request.Repo,
+            Version = rel.TagName,
+            LastReleased = rel.PublishedAt,
+            SupportedPlatforms = PlatformConverter.ConvertStringToCore(request.Platform),
+        };
+        bool exists = await _db.Packages
+            .AnyAsync(p => p.Owner == request.Owner && p.Repo == request.Repo);
 
-		if (!exists)
-		{
-			_db.Packages.Add(package);
-			package.Id = Guid.CreateVersion7();
+        if (!exists)
+        {
+            _db.Packages.Add(package);
+            package.Id = Guid.CreateVersion7();
 
-			PackageStatistics stats = new()
-			{
-				Id = package.Id, // change? maybe just generate a long?
-				PackageId = package.Id,
-				Installs = new(),
-			};
-			stats.Installs.Track();
-			_db.PackageStats.Add(stats);
+            PackageStatistics stats = new()
+            {
+                Id = package.Id, // change? maybe just generate a long?
+                PackageId = package.Id,
+                Installs = new(),
+            };
+            stats.Installs.Track();
+            _db.PackageStats.Add(stats);
 
-			// TODO: put this elsewhere, maybe batch saves?
-			try
-			{
-				await _db.SaveChangesAsync();
-			}
-			catch (DbUpdateException)
-			{
-				// NO-OP
-			}
-		}
+            // TODO: put this elsewhere, maybe batch saves?
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                // NO-OP
+            }
+        }
 
-		return new EnsureTrackedResponse();
-	}
+        return new EnsureTrackedResponse();
+    }
 
-	// TODO: report updates
+    // TODO: report updates
 
-	public override async Task<ReportInstallResponse> ReportInstall(ReportInstallRequest request, ServerCallContext context)
-	{
-		var pkg = await _db.Packages
-			.FirstOrDefaultAsync(p => p.Owner == request.Owner && p.Repo == request.Repo);
+    public override async Task<ReportInstallResponse> ReportInstall(ReportInstallRequest request, ServerCallContext context)
+    {
+        var pkg = await _db.Packages
+            .FirstOrDefaultAsync(p => p.Owner == request.Owner && p.Repo == request.Repo);
 
-		// TODO: do something, increment download metrics
+        // TODO: do something, increment download metrics
 
-		return new ReportInstallResponse();
-	}
+        return new ReportInstallResponse();
+    }
 }

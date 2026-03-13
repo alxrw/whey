@@ -5,24 +5,24 @@ namespace Whey.Tests.Unit;
 
 public class DependencyFinderServiceTests
 {
-	[Fact]
-	public void ParseObjdumpOutput_SingleNeededEntry_ParsesCorrectly()
-	{
-		var output = """
+    [Fact]
+    public void ParseObjdumpOutput_SingleNeededEntry_ParsesCorrectly()
+    {
+        var output = """
 			Dynamic Section:
 			  NEEDED               libpthread.so.0
 			""";
 
-		var result = DependencyFinderService.ParseObjdumpOutput(output);
+        var result = DependencyFinderService.ParseObjdumpOutput(output);
 
-		result.Should().ContainSingle();
-		result[0].Should().Be("libpthread.so.0");
-	}
+        result.Should().ContainSingle();
+        result[0].Should().Be("libpthread.so.0");
+    }
 
-	[Fact]
-	public void ParseObjdumpOutput_MultipleNeededEntries_ParsesAll()
-	{
-		var output = """
+    [Fact]
+    public void ParseObjdumpOutput_MultipleNeededEntries_ParsesAll()
+    {
+        var output = """
 			Dynamic Section:
 			  NEEDED               libpthread.so.0
 			  NEEDED               libc.so.6
@@ -30,43 +30,43 @@ public class DependencyFinderServiceTests
 			  NEEDED               libdl.so.2
 			""";
 
-		var result = DependencyFinderService.ParseObjdumpOutput(output);
+        var result = DependencyFinderService.ParseObjdumpOutput(output);
 
-		result.Should().HaveCount(4);
-		result.Should().Contain("libpthread.so.0");
-		result.Should().Contain("libc.so.6");
-		result.Should().Contain("libm.so.6");
-		result.Should().Contain("libdl.so.2");
-	}
+        result.Should().HaveCount(4);
+        result.Should().Contain("libpthread.so.0");
+        result.Should().Contain("libc.so.6");
+        result.Should().Contain("libm.so.6");
+        result.Should().Contain("libdl.so.2");
+    }
 
-	[Fact]
-	public void ParseObjdumpOutput_EmptyOutput_ReturnsEmpty()
-	{
-		var output = "";
+    [Fact]
+    public void ParseObjdumpOutput_EmptyOutput_ReturnsEmpty()
+    {
+        var output = "";
 
-		var result = DependencyFinderService.ParseObjdumpOutput(output);
+        var result = DependencyFinderService.ParseObjdumpOutput(output);
 
-		result.Should().BeEmpty();
-	}
+        result.Should().BeEmpty();
+    }
 
-	[Fact]
-	public void ParseObjdumpOutput_NoNeededEntries_ReturnsEmpty()
-	{
-		var output = """
+    [Fact]
+    public void ParseObjdumpOutput_NoNeededEntries_ReturnsEmpty()
+    {
+        var output = """
 			Dynamic Section:
 			  SONAME               libfoo.so.1
 			  RPATH                /usr/lib
 			""";
 
-		var result = DependencyFinderService.ParseObjdumpOutput(output);
+        var result = DependencyFinderService.ParseObjdumpOutput(output);
 
-		result.Should().BeEmpty();
-	}
+        result.Should().BeEmpty();
+    }
 
-	[Fact]
-	public void ParseObjdumpOutput_MixedEntries_OnlyParsesNeeded()
-	{
-		var output = """
+    [Fact]
+    public void ParseObjdumpOutput_MixedEntries_OnlyParsesNeeded()
+    {
+        var output = """
 			file format elf64-x86-64
 			
 			Dynamic Section:
@@ -78,29 +78,29 @@ public class DependencyFinderServiceTests
 			  FINI                 0x0000000000002000
 			""";
 
-		var result = DependencyFinderService.ParseObjdumpOutput(output);
+        var result = DependencyFinderService.ParseObjdumpOutput(output);
 
-		result.Should().HaveCount(2);
-		result.Should().Contain("libpthread.so.0");
-		result.Should().Contain("libc.so.6");
-	}
+        result.Should().HaveCount(2);
+        result.Should().Contain("libpthread.so.0");
+        result.Should().Contain("libc.so.6");
+    }
 
-	[Fact]
-	public void ParseObjdumpOutput_TrimsWhitespace()
-	{
-		var output = "  NEEDED               libfoo.so.1   ";
+    [Fact]
+    public void ParseObjdumpOutput_TrimsWhitespace()
+    {
+        var output = "  NEEDED               libfoo.so.1   ";
 
-		var result = DependencyFinderService.ParseObjdumpOutput(output);
+        var result = DependencyFinderService.ParseObjdumpOutput(output);
 
-		result.Should().ContainSingle();
-		result[0].Should().Be("libfoo.so.1");
-	}
+        result.Should().ContainSingle();
+        result[0].Should().Be("libfoo.so.1");
+    }
 
-	[Fact]
-	public void ParseObjdumpOutput_RealWorldExample_ParsesCorrectly()
-	{
-		// Simulated output from `objdump -p /bin/ls`
-		var output = """
+    [Fact]
+    public void ParseObjdumpOutput_RealWorldExample_ParsesCorrectly()
+    {
+        // Simulated output from `objdump -p /bin/ls`
+        var output = """
 			/bin/ls:     file format elf64-x86-64
 			
 			Program Header:
@@ -140,43 +140,43 @@ public class DependencyFinderServiceTests
 			  required from libc.so.6:
 			""";
 
-		var result = DependencyFinderService.ParseObjdumpOutput(output);
+        var result = DependencyFinderService.ParseObjdumpOutput(output);
 
-		result.Should().HaveCount(2);
-		result.Should().Contain("libselinux.so.1");
-		result.Should().Contain("libc.so.6");
-	}
+        result.Should().HaveCount(2);
+        result.Should().Contain("libselinux.so.1");
+        result.Should().Contain("libc.so.6");
+    }
 
-	[Fact]
-	public void ParseObjdumpOutput_TabSeparated_ParsesCorrectly()
-	{
-		// Some objdump versions use tabs instead of spaces
-		var output = "\tNEEDED\t\t\tlibfoo.so.1";
+    [Fact]
+    public void ParseObjdumpOutput_TabSeparated_ParsesCorrectly()
+    {
+        // Some objdump versions use tabs instead of spaces
+        var output = "\tNEEDED\t\t\tlibfoo.so.1";
 
-		var result = DependencyFinderService.ParseObjdumpOutput(output);
+        var result = DependencyFinderService.ParseObjdumpOutput(output);
 
-		result.Should().ContainSingle();
-		result[0].Should().Be("libfoo.so.1");
-	}
+        result.Should().ContainSingle();
+        result[0].Should().Be("libfoo.so.1");
+    }
 
-	[Fact]
-	public void ObjdumpParsePattern_MatchesCorrectFormat()
-	{
-		var regex = DependencyFinderService.ObjdumpParsePattern();
+    [Fact]
+    public void ObjdumpParsePattern_MatchesCorrectFormat()
+    {
+        var regex = DependencyFinderService.ObjdumpParsePattern();
 
-		var match = regex.Match("  NEEDED               libtest.so.1");
+        var match = regex.Match("  NEEDED               libtest.so.1");
 
-		match.Success.Should().BeTrue();
-		match.Groups[1].Value.Trim().Should().Be("libtest.so.1");
-	}
+        match.Success.Should().BeTrue();
+        match.Groups[1].Value.Trim().Should().Be("libtest.so.1");
+    }
 
-	[Fact]
-	public void ObjdumpParsePattern_DoesNotMatchInvalidFormats()
-	{
-		var regex = DependencyFinderService.ObjdumpParsePattern();
+    [Fact]
+    public void ObjdumpParsePattern_DoesNotMatchInvalidFormats()
+    {
+        var regex = DependencyFinderService.ObjdumpParsePattern();
 
-		regex.IsMatch("SONAME libtest.so.1").Should().BeFalse();
-		regex.IsMatch("libtest.so.1 NEEDED").Should().BeFalse();
-		regex.IsMatch("NEED libtest.so.1").Should().BeFalse();
-	}
+        regex.IsMatch("SONAME libtest.so.1").Should().BeFalse();
+        regex.IsMatch("libtest.so.1 NEEDED").Should().BeFalse();
+        regex.IsMatch("NEED libtest.so.1").Should().BeFalse();
+    }
 }
