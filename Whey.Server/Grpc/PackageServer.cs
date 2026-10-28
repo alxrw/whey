@@ -1,5 +1,4 @@
 using Grpc.Core;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Whey.Infra.Configuration;
@@ -12,7 +11,6 @@ using ProtoPlatform = Whey.Server.Proto.Platform;
 
 namespace Whey.Server.Grpc;
 
-[Authorize]
 public class PackageRetrieverServiceImpl : PackageRetrieverService.PackageRetrieverServiceBase
 {
 	private readonly WheyContext _db;

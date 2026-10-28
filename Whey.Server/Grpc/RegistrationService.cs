@@ -4,7 +4,9 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.Extensions.Caching.Distributed;
 using NSec.Cryptography;
+using Microsoft.EntityFrameworkCore;
 using Whey.Infra.Data;
+using Whey.Server.Interceptors;
 using Whey.Core.Models;
 using Whey.Server.Converters;
 using Whey.Server.Proto;
@@ -87,7 +89,10 @@ public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBa
 			Purpose = "register", // method name but in camel case?
 			RpcMethod = "/whey.WheyRegistration/Register", // ngl should probably change this
 		};
-		var nsecPublicKey = PublicKey.Import(SignatureAlgorithm.Ed25519, request.PublicKey.Span, KeyBlobFormat.RawPublicKey);
+		if (!PublicKey.TryImport(SignatureAlgorithm.Ed25519, request.PublicKey.Span, KeyBlobFormat.RawPublicKey, out var nsecPublicKey) || nsecPublicKey is null)
+		{
+			throw new RpcException(new Status(StatusCode.InvalidArgument, "public key must be a raw 32-byte Ed25519 key"));
+		}
 		bool valid = SignatureAlgorithm.Ed25519.Verify(nsecPublicKey, intent.ToByteArray(), request.PayloadSignature.Span);
 		if (!valid)
 		{
@@ -102,7 +107,7 @@ public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBa
 		WheyClient client = new()
 		{
 			Id = Guid.CreateVersion7(),
-			PublicKey = request.PublicKey.ToString()!,
+			PublicKey = AuthenticationInterceptor.EncodePublicKey(request.PublicKey.Span),
 			Version = request.Version,
 			Platform = platform,
 			TokenExpiry = registerTime.AddDays(TOKEN_EXPIRY),
@@ -110,7 +115,19 @@ public class RegistrationServiceImpl : RegistrationService.RegistrationServiceBa
 		};
 
 		await _context.Clients.AddAsync(client, context.CancellationToken);
-		await _context.SaveChangesAsync();
+		try
+		{
+			await _context.SaveChangesAsync(context.CancellationToken);
+		}
+		catch (DbUpdateException)
+		{
+			_context.ChangeTracker.Clear();
+			if (await _context.Clients.AsNoTracking().AnyAsync(c => c.PublicKey == client.PublicKey, context.CancellationToken))
+			{
+				throw new RpcException(new Status(StatusCode.AlreadyExists, "public key is already registered"));
+			}
+			throw;
+		}
 
 		return new RegisterResponse();
 	}

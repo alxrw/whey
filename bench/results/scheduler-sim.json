@@ -1,0 +1,1248 @@
+{
+  "env": {
+    "os": "Ubuntu 22.04.5 LTS",
+    "runtime": ".NET 10.0.13",
+    "cores": 16,
+    "date": "2026-10-28"
+  },
+  "horizonDays": 180,
+  "seeds": 5,
+  "fidelity": {},
+  "summaries": [
+    {
+      "scenario": "mature-zipf",
+      "staleReductionVsEqualBudget": 0.5030598158627525,
+      "staleReductionStd": 0.032145270862815725,
+      "apiCallSavingsVsHourly": 0.5716093055555556
+    },
+    {
+      "scenario": "mature-release-rate-independent",
+      "staleReductionVsEqualBudget": 0.2659247757818637,
+      "staleReductionStd": 0.05828890518489553,
+      "apiCallSavingsVsHourly": 0.5455557870370369
+    },
+    {
+      "scenario": "cold-start-no-interactions",
+      "staleReductionVsEqualBudget": 0.5041657359787833,
+      "staleReductionStd": 0.030764424265280328,
+      "apiCallSavingsVsHourly": 0.5864613009259261
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario": {
+        "Name": "mature-zipf",
+        "Packages": 10000,
+        "ZipfExponent": 1,
+        "TopInstallsPerDay": 2000,
+        "ObservationDays": 30,
+        "InteractionsRecorded": true,
+        "ReleaseRateCorrelation": 0.5,
+        "MedianReleaseIntervalDays": 45,
+        "ReleaseIntervalSigma": 1.2
+      },
+      "policies": [
+        {
+          "policy": "Whey tiered",
+          "runs": [
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.269269444444443,
+              "DelayMeanHours": 1.5636930213958722,
+              "DelayP50Hours": 0.651150456437108,
+              "DelayP95Hours": 5.437839526381367,
+              "DelayP99Hours": 18.566276571823437,
+              "WeightedDelayP95Hours": 0.9704695903608922,
+              "StaleInstallPercent": 2.365484111547074,
+              "StaleTimePercent": 0.3352239307812843,
+              "UsefulPollPercent": 0.5010201688587066
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.265509444444444,
+              "DelayMeanHours": 1.5971230184390988,
+              "DelayP50Hours": 0.6564838960107409,
+              "DelayP95Hours": 5.483569829951989,
+              "DelayP99Hours": 18.644931605326406,
+              "WeightedDelayP95Hours": 0.9755497914020239,
+              "StaleInstallPercent": 1.6733378974637292,
+              "StaleTimePercent": 0.332508442489337,
+              "UsefulPollPercent": 0.4867377637858207
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.335482777777777,
+              "DelayMeanHours": 1.5679019848405886,
+              "DelayP50Hours": 0.653517735240257,
+              "DelayP95Hours": 5.454436239470738,
+              "DelayP99Hours": 18.512176083428358,
+              "WeightedDelayP95Hours": 0.9838785123280331,
+              "StaleInstallPercent": 4.283862132730207,
+              "StaleTimePercent": 0.338343811881469,
+              "UsefulPollPercent": 0.5010946916472052
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.355647222222222,
+              "DelayMeanHours": 1.5816189325874586,
+              "DelayP50Hours": 0.6575036166956352,
+              "DelayP95Hours": 5.469025188589285,
+              "DelayP99Hours": 18.302617962972363,
+              "WeightedDelayP95Hours": 0.9787893978117381,
+              "StaleInstallPercent": 1.540550882430488,
+              "StaleTimePercent": 0.33054737344596896,
+              "UsefulPollPercent": 0.4843573004852693
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.180974444444445,
+              "DelayMeanHours": 1.6094894840593634,
+              "DelayP50Hours": 0.662038180636273,
+              "DelayP95Hours": 5.50181528465896,
+              "DelayP99Hours": 18.58399718080193,
+              "WeightedDelayP95Hours": 0.9785497735447279,
+              "StaleInstallPercent": 3.941900866074744,
+              "StaleTimePercent": 0.328134668562603,
+              "UsefulPollPercent": 0.48060232610347164
+            }
+          ]
+        },
+        {
+          "policy": "Uniform, same API budget",
+          "runs": [
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.269286111111112,
+              "DelayMeanHours": 1.181117475605803,
+              "DelayP50Hours": 1.189233695188932,
+              "DelayP95Hours": 2.2254009602548877,
+              "DelayP99Hours": 2.3135804700904714,
+              "WeightedDelayP95Hours": 2.244326470201713,
+              "StaleInstallPercent": 4.943062877868423,
+              "StaleTimePercent": 0.2485213340222604,
+              "UsefulPollPercent": 0.49174682974554923
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.265507777777778,
+              "DelayMeanHours": 1.1774050435818582,
+              "DelayP50Hours": 1.1822512756223205,
+              "DelayP95Hours": 2.2220563079704334,
+              "DelayP99Hours": 2.314128797290948,
+              "WeightedDelayP95Hours": 2.215650352016837,
+              "StaleInstallPercent": 3.589335650667734,
+              "StaleTimePercent": 0.2429978677677553,
+              "UsefulPollPercent": 0.4825111752333083
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.335465000000001,
+              "DelayMeanHours": 1.1768674706639577,
+              "DelayP50Hours": 1.1819674808858949,
+              "DelayP95Hours": 2.2118152395580637,
+              "DelayP99Hours": 2.2994434770108114,
+              "WeightedDelayP95Hours": 2.268567560084307,
+              "StaleInstallPercent": 7.892140525945017,
+              "StaleTimePercent": 0.24952859454383386,
+              "UsefulPollPercent": 0.4923500458534441
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.355641111111112,
+              "DelayMeanHours": 1.168670126023384,
+              "DelayP50Hours": 1.1724314793468693,
+              "DelayP95Hours": 2.204596776384392,
+              "DelayP99Hours": 2.2951942225110997,
+              "WeightedDelayP95Hours": 2.2078542424387706,
+              "StaleInstallPercent": 3.213986547583608,
+              "StaleTimePercent": 0.24157655922167168,
+              "UsefulPollPercent": 0.47906793044735574
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.180938333333334,
+              "DelayMeanHours": 1.1913880450360206,
+              "DelayP50Hours": 1.1975544271151648,
+              "DelayP95Hours": 2.2421996577347727,
+              "DelayP99Hours": 2.333655828987048,
+              "WeightedDelayP95Hours": 2.287670870991178,
+              "StaleInstallPercent": 7.612353925026221,
+              "StaleTimePercent": 0.2389974059510793,
+              "UsefulPollPercent": 0.47289354304768566
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 1h",
+          "runs": [
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5035082755374771,
+              "DelayP50Hours": 0.5060711159349012,
+              "DelayP95Hours": 0.9506605727465285,
+              "DelayP99Hours": 0.9898322395921468,
+              "WeightedDelayP95Hours": 0.9537828758070646,
+              "StaleInstallPercent": 2.318364132458232,
+              "StaleTimePercent": 0.10817735436512854,
+              "UsefulPollPercent": 0.21484722222222222
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5006500752027072,
+              "DelayP50Hours": 0.5013343419761895,
+              "DelayP95Hours": 0.9495272908659445,
+              "DelayP99Hours": 0.9900167402061015,
+              "WeightedDelayP95Hours": 0.9536223586458163,
+              "StaleInstallPercent": 1.5973126571340692,
+              "StaleTimePercent": 0.10439597088966486,
+              "UsefulPollPercent": 0.20852083333333332
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.50348054627851,
+              "DelayP50Hours": 0.5050865035708227,
+              "DelayP95Hours": 0.9504934016795232,
+              "DelayP99Hours": 0.9901601233306963,
+              "WeightedDelayP95Hours": 0.9613936274995467,
+              "StaleInstallPercent": 4.184653579713185,
+              "StaleTimePercent": 0.10882172584980901,
+              "UsefulPollPercent": 0.21613888888888888
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5000238562133741,
+              "DelayP50Hours": 0.49966574214568027,
+              "DelayP95Hours": 0.9499119601866823,
+              "DelayP99Hours": 0.9896912806549949,
+              "WeightedDelayP95Hours": 0.9488221353349218,
+              "StaleInstallPercent": 1.4386109630534691,
+              "StaleTimePercent": 0.10467281802996384,
+              "UsefulPollPercent": 0.20933564814814815
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5021940867946025,
+              "DelayP50Hours": 0.502862621069653,
+              "DelayP95Hours": 0.9508064351998229,
+              "DelayP99Hours": 0.9898203482499639,
+              "WeightedDelayP95Hours": 0.9601073022265609,
+              "StaleInstallPercent": 3.8856095338588275,
+              "StaleTimePercent": 0.10254989250155692,
+              "UsefulPollPercent": 0.2042037037037037
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 6h",
+          "runs": [
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.0743946686246715,
+              "DelayP50Hours": 3.109135156291188,
+              "DelayP95Hours": 5.72429627967653,
+              "DelayP99Hours": 5.943510259772211,
+              "WeightedDelayP95Hours": 5.790158227666723,
+              "StaleInstallPercent": 10.76418902278547,
+              "StaleTimePercent": 0.6205864904940009,
+              "UsefulPollPercent": 1.211138888888889
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.033999447446949,
+              "DelayP50Hours": 3.0493359226712116,
+              "DelayP95Hours": 5.716287885211557,
+              "DelayP99Hours": 5.949101695264744,
+              "WeightedDelayP95Hours": 5.774776622459058,
+              "StaleInstallPercent": 8.246343146285984,
+              "StaleTimePercent": 0.6097917500556216,
+              "UsefulPollPercent": 1.2059166666666667
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.053823465869083,
+              "DelayP50Hours": 3.083076692407758,
+              "DelayP95Hours": 5.717370843842275,
+              "DelayP99Hours": 5.943680251423302,
+              "WeightedDelayP95Hours": 5.894072119041425,
+              "StaleInstallPercent": 13.623263061210112,
+              "StaleTimePercent": 0.6240544804789829,
+              "UsefulPollPercent": 1.2261111111111112
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.0436998978536454,
+              "DelayP50Hours": 3.0681763030818274,
+              "DelayP95Hours": 5.717281061734852,
+              "DelayP99Hours": 5.944634069074766,
+              "WeightedDelayP95Hours": 5.7944571672571215,
+              "StaleInstallPercent": 7.434570418792706,
+              "StaleTimePercent": 0.6103463767390465,
+              "UsefulPollPercent": 1.2031666666666667
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.0533976832260006,
+              "DelayP50Hours": 3.0743710188686464,
+              "DelayP95Hours": 5.7130942169928005,
+              "DelayP99Hours": 5.941628437872623,
+              "WeightedDelayP95Hours": 5.873104203301182,
+              "StaleInstallPercent": 13.609013112922527,
+              "StaleTimePercent": 0.5918290467813941,
+              "UsefulPollPercent": 1.1629583333333333
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 24h",
+          "runs": [
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.480098201322436,
+              "DelayP50Hours": 12.69798389490768,
+              "DelayP95Hours": 22.98874174802347,
+              "DelayP99Hours": 23.80526235001291,
+              "WeightedDelayP95Hours": 23.576112659478667,
+              "StaleInstallPercent": 25.92156052154311,
+              "StaleTimePercent": 2.2595911132283195,
+              "UsefulPollPercent": 4.3453333333333335
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.477883739160136,
+              "DelayP50Hours": 12.747150278039044,
+              "DelayP95Hours": 22.947106529255052,
+              "DelayP99Hours": 23.788286641311686,
+              "WeightedDelayP95Hours": 23.502209941622368,
+              "StaleInstallPercent": 22.03109618469962,
+              "StaleTimePercent": 2.2701083208230304,
+              "UsefulPollPercent": 4.366333333333333
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.516848665490699,
+              "DelayP50Hours": 12.765293467353956,
+              "DelayP95Hours": 22.970664579736564,
+              "DelayP99Hours": 23.804456054217894,
+              "WeightedDelayP95Hours": 23.828694831648818,
+              "StaleInstallPercent": 25.94933715087639,
+              "StaleTimePercent": 2.3068667987246427,
+              "UsefulPollPercent": 4.423222222222222
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.484331670841733,
+              "DelayP50Hours": 12.692398987849856,
+              "DelayP95Hours": 22.95655013604744,
+              "DelayP99Hours": 23.79493315642162,
+              "WeightedDelayP95Hours": 23.467025270315844,
+              "StaleInstallPercent": 20.63060291411912,
+              "StaleTimePercent": 2.2692295735868133,
+              "UsefulPollPercent": 4.362388888888889
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.440226319614888,
+              "DelayP50Hours": 12.649702066630084,
+              "DelayP95Hours": 22.960033575136322,
+              "DelayP99Hours": 23.790837122201765,
+              "WeightedDelayP95Hours": 23.747518968188274,
+              "StaleInstallPercent": 25.97485686588905,
+              "StaleTimePercent": 2.1834325000135175,
+              "UsefulPollPercent": 4.2123333333333335
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 3d",
+          "runs": [
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.73436654040844,
+              "DelayP50Hours": 40.0381669732144,
+              "DelayP95Hours": 69.30194784122978,
+              "DelayP99Hours": 71.46926541129369,
+              "WeightedDelayP95Hours": 71.4541295366991,
+              "StaleInstallPercent": 40.81053779354139,
+              "StaleTimePercent": 5.946442567036795,
+              "UsefulPollPercent": 11.053333333333333
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.877662749737674,
+              "DelayP50Hours": 40.36387760626761,
+              "DelayP95Hours": 69.25165588734075,
+              "DelayP99Hours": 71.45432453965645,
+              "WeightedDelayP95Hours": 71.12224815882564,
+              "StaleInstallPercent": 37.382849401920716,
+              "StaleTimePercent": 5.973390891235671,
+              "UsefulPollPercent": 11.0625
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.84404287229664,
+              "DelayP50Hours": 40.284476541683375,
+              "DelayP95Hours": 69.31160557381284,
+              "DelayP99Hours": 71.4704112142499,
+              "WeightedDelayP95Hours": 71.67144268648633,
+              "StaleInstallPercent": 39.577549662429064,
+              "StaleTimePercent": 6.06065977250325,
+              "UsefulPollPercent": 11.233833333333333
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.726114101340606,
+              "DelayP50Hours": 39.910340921186815,
+              "DelayP95Hours": 69.22640349359267,
+              "DelayP99Hours": 71.51502553785281,
+              "WeightedDelayP95Hours": 71.20988264456957,
+              "StaleInstallPercent": 35.75193308324783,
+              "StaleTimePercent": 5.996003689574921,
+              "UsefulPollPercent": 11.147833333333333
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.677614625273094,
+              "DelayP50Hours": 40.00302943611473,
+              "DelayP95Hours": 69.26249450062528,
+              "DelayP99Hours": 71.44657145855342,
+              "WeightedDelayP95Hours": 71.69057404498471,
+              "StaleInstallPercent": 39.358504920346746,
+              "StaleTimePercent": 5.800030626514898,
+              "UsefulPollPercent": 10.797
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Name": "mature-release-rate-independent",
+        "Packages": 10000,
+        "ZipfExponent": 1,
+        "TopInstallsPerDay": 2000,
+        "ObservationDays": 30,
+        "InteractionsRecorded": true,
+        "ReleaseRateCorrelation": 0,
+        "MedianReleaseIntervalDays": 45,
+        "ReleaseIntervalSigma": 1.2
+      },
+      "policies": [
+        {
+          "policy": "Whey tiered",
+          "runs": [
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.892732777777779,
+              "DelayMeanHours": 1.6535249525552271,
+              "DelayP50Hours": 0.6780056292827226,
+              "DelayP95Hours": 5.509962766225044,
+              "DelayP99Hours": 18.149513003456207,
+              "WeightedDelayP95Hours": 2.5324407288514976,
+              "StaleInstallPercent": 0.16908444949734444,
+              "StaleTimePercent": 0.3077623317943429,
+              "UsefulPollPercent": 0.41008992794839416
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.885581666666667,
+              "DelayMeanHours": 1.6519591350098926,
+              "DelayP50Hours": 0.681972179630975,
+              "DelayP95Hours": 5.5207676474874745,
+              "DelayP99Hours": 17.952926092527917,
+              "WeightedDelayP95Hours": 3.8458802132659002,
+              "StaleInstallPercent": 0.132612853427919,
+              "StaleTimePercent": 0.31069833268415087,
+              "UsefulPollPercent": 0.4146667607768829
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.97339388888889,
+              "DelayMeanHours": 1.6378461396937762,
+              "DelayP50Hours": 0.6771815805890355,
+              "DelayP95Hours": 5.516439379720964,
+              "DelayP99Hours": 17.89231045774352,
+              "WeightedDelayP95Hours": 2.5754564591205735,
+              "StaleInstallPercent": 0.17419212560596906,
+              "StaleTimePercent": 0.31268454288218506,
+              "UsefulPollPercent": 0.4175452859236449
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.973477222222222,
+              "DelayMeanHours": 1.6257888468451434,
+              "DelayP50Hours": 0.6797984916186692,
+              "DelayP95Hours": 5.48436657787795,
+              "DelayP99Hours": 17.50862482856951,
+              "WeightedDelayP95Hours": 3.521609628183569,
+              "StaleInstallPercent": 0.14064058438520013,
+              "StaleTimePercent": 0.3094342837159774,
+              "UsefulPollPercent": 0.4162663116152942
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.80812,
+              "DelayMeanHours": 1.690380489913908,
+              "DelayP50Hours": 0.691202007949677,
+              "DelayP95Hours": 5.581091967802195,
+              "DelayP99Hours": 18.14965196006392,
+              "WeightedDelayP95Hours": 2.422703634674235,
+              "StaleInstallPercent": 0.16671565893823032,
+              "StaleTimePercent": 0.30616234040005663,
+              "UsefulPollPercent": 0.40218732664782486
+            }
+          ]
+        },
+        {
+          "policy": "Uniform, same API budget",
+          "runs": [
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.892703333333333,
+              "DelayMeanHours": 1.1029653462206577,
+              "DelayP50Hours": 1.1035977458739126,
+              "DelayP95Hours": 2.092787661516468,
+              "DelayP99Hours": 2.181100740612237,
+              "WeightedDelayP95Hours": 2.0915514781149795,
+              "StaleInstallPercent": 0.24022830618642194,
+              "StaleTimePercent": 0.204873259899963,
+              "UsefulPollPercent": 0.409259695047643
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.885557777777779,
+              "DelayMeanHours": 1.1087152718352502,
+              "DelayP50Hours": 1.115108852682738,
+              "DelayP95Hours": 2.0948684630798198,
+              "DelayP99Hours": 2.184265263395787,
+              "WeightedDelayP95Hours": 2.1039574110268973,
+              "StaleInstallPercent": 0.16537142609168667,
+              "StaleTimePercent": 0.20784818288159643,
+              "UsefulPollPercent": 0.41332031982845363
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.973418333333333,
+              "DelayMeanHours": 1.0952562161558759,
+              "DelayP50Hours": 1.0967015365135921,
+              "DelayP95Hours": 2.077507541205705,
+              "DelayP99Hours": 2.1654661572694067,
+              "WeightedDelayP95Hours": 2.0551217084725977,
+              "StaleInstallPercent": 0.24322808760178288,
+              "StaleTimePercent": 0.20826347656510252,
+              "UsefulPollPercent": 0.4158787145887337
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.97350611111111,
+              "DelayMeanHours": 1.0935831645357952,
+              "DelayP50Hours": 1.0947375780518769,
+              "DelayP95Hours": 2.078610499623892,
+              "DelayP99Hours": 2.164328714644242,
+              "WeightedDelayP95Hours": 2.078037996468993,
+              "StaleInstallPercent": 0.17899825480596748,
+              "StaleTimePercent": 0.2075985374010477,
+              "UsefulPollPercent": 0.4151817982209778
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.808074444444445,
+              "DelayMeanHours": 1.1107893981491135,
+              "DelayP50Hours": 1.1121329432558014,
+              "DelayP95Hours": 2.1079503430009936,
+              "DelayP99Hours": 2.1992488819414575,
+              "WeightedDelayP95Hours": 2.1089787506850826,
+              "StaleInstallPercent": 0.2515547800543426,
+              "StaleTimePercent": 0.20061319359489063,
+              "UsefulPollPercent": 0.4010427594924659
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 1h",
+          "runs": [
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5008726364367785,
+              "DelayP50Hours": 0.4996495118261919,
+              "DelayP95Hours": 0.9511210294062948,
+              "DelayP99Hours": 0.9901369451217761,
+              "WeightedDelayP95Hours": 0.9420331189310218,
+              "StaleInstallPercent": 0.10988408803080935,
+              "StaleTimePercent": 0.09345680493662868,
+              "UsefulPollPercent": 0.18658796296296296
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5001308781548794,
+              "DelayP50Hours": 0.49990883481734727,
+              "DelayP95Hours": 0.9501286653253374,
+              "DelayP99Hours": 0.9898484759913799,
+              "WeightedDelayP95Hours": 0.9459472159591655,
+              "StaleInstallPercent": 0.07344793949289706,
+              "StaleTimePercent": 0.09422488898645212,
+              "UsefulPollPercent": 0.18840046296296295
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5008718559397521,
+              "DelayP50Hours": 0.5014685047210605,
+              "DelayP95Hours": 0.9502182523376632,
+              "DelayP99Hours": 0.9907738387638467,
+              "WeightedDelayP95Hours": 0.9274092927375932,
+              "StaleInstallPercent": 0.1061061958522878,
+              "StaleTimePercent": 0.09581724981151236,
+              "UsefulPollPercent": 0.19130092592592593
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5006228471406453,
+              "DelayP50Hours": 0.5001868922345238,
+              "DelayP95Hours": 0.9502386239530551,
+              "DelayP99Hours": 0.9900808048531076,
+              "WeightedDelayP95Hours": 0.9457525532100135,
+              "StaleInstallPercent": 0.08484874608412865,
+              "StaleTimePercent": 0.09545440721985007,
+              "UsefulPollPercent": 0.19067129629629628
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.49972516801402067,
+              "DelayP50Hours": 0.5000507343838763,
+              "DelayP95Hours": 0.9495705995047956,
+              "DelayP99Hours": 0.9900852968930849,
+              "WeightedDelayP95Hours": 0.9575394192853537,
+              "StaleInstallPercent": 0.10772322623707982,
+              "StaleTimePercent": 0.09069780445209974,
+              "UsefulPollPercent": 0.18149537037037036
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 6h",
+          "runs": [
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.0232445586359695,
+              "DelayP50Hours": 3.033337300100925,
+              "DelayP95Hours": 5.711802190836806,
+              "DelayP99Hours": 5.942685274349515,
+              "WeightedDelayP95Hours": 5.697414933827588,
+              "StaleInstallPercent": 0.672295766811855,
+              "StaleTimePercent": 0.553554679035986,
+              "UsefulPollPercent": 1.0985972222222222
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.0277076192196217,
+              "DelayP50Hours": 3.03844459785023,
+              "DelayP95Hours": 5.703350510258247,
+              "DelayP99Hours": 5.942548903752822,
+              "WeightedDelayP95Hours": 5.693036201164006,
+              "StaleInstallPercent": 0.4415659786028245,
+              "StaleTimePercent": 0.5591797509246257,
+              "UsefulPollPercent": 1.108125
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.032300848447676,
+              "DelayP50Hours": 3.055502693752942,
+              "DelayP95Hours": 5.711217028491092,
+              "DelayP99Hours": 5.939850624698806,
+              "WeightedDelayP95Hours": 5.586541280447648,
+              "StaleInstallPercent": 0.6643819408526787,
+              "StaleTimePercent": 0.5670472778746446,
+              "UsefulPollPercent": 1.1220138888888889
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.016693515992135,
+              "DelayP50Hours": 3.0336672911189453,
+              "DelayP95Hours": 5.702209293540022,
+              "DelayP99Hours": 5.942688712465269,
+              "WeightedDelayP95Hours": 5.806682181334395,
+              "StaleInstallPercent": 0.5015912248173204,
+              "StaleTimePercent": 0.5638144316694512,
+              "UsefulPollPercent": 1.121388888888889
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.025124540265362,
+              "DelayP50Hours": 3.0392002532496463,
+              "DelayP95Hours": 5.7123637611163645,
+              "DelayP99Hours": 5.940992479424608,
+              "WeightedDelayP95Hours": 5.8203209853187445,
+              "StaleInstallPercent": 0.7265387282481273,
+              "StaleTimePercent": 0.5396416028853449,
+              "UsefulPollPercent": 1.0703194444444444
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 24h",
+          "runs": [
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.290892789502491,
+              "DelayP50Hours": 12.448137190212037,
+              "DelayP95Hours": 22.89426840474158,
+              "DelayP99Hours": 23.7754499435232,
+              "WeightedDelayP95Hours": 23.01537027012364,
+              "StaleInstallPercent": 2.5160784183135436,
+              "StaleTimePercent": 2.1232801805272503,
+              "UsefulPollPercent": 4.146055555555556
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.279369973184439,
+              "DelayP50Hours": 12.44452726261958,
+              "DelayP95Hours": 22.868159725694028,
+              "DelayP99Hours": 23.785457275676208,
+              "WeightedDelayP95Hours": 22.96617779997723,
+              "StaleInstallPercent": 1.7188667842032608,
+              "StaleTimePercent": 2.1316645179837828,
+              "UsefulPollPercent": 4.166333333333333
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.3238341043241,
+              "DelayP50Hours": 12.513013249650953,
+              "DelayP95Hours": 22.885191997906077,
+              "DelayP99Hours": 23.772043954233936,
+              "WeightedDelayP95Hours": 23.022116923321732,
+              "StaleInstallPercent": 2.500232874417996,
+              "StaleTimePercent": 2.1616347347709426,
+              "UsefulPollPercent": 4.209666666666666
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.32947695350342,
+              "DelayP50Hours": 12.47124610662729,
+              "DelayP95Hours": 22.871957561646013,
+              "DelayP99Hours": 23.768720176949216,
+              "WeightedDelayP95Hours": 22.686166789973697,
+              "StaleInstallPercent": 1.9175684338995604,
+              "StaleTimePercent": 2.162481803912042,
+              "UsefulPollPercent": 4.209388888888889
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.261172855624602,
+              "DelayP50Hours": 12.346251288216637,
+              "DelayP95Hours": 22.88662355022575,
+              "DelayP99Hours": 23.776508426653997,
+              "WeightedDelayP95Hours": 22.79109310499416,
+              "StaleInstallPercent": 2.4304753492023647,
+              "StaleTimePercent": 2.0647588030115305,
+              "UsefulPollPercent": 4.041555555555555
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 3d",
+          "runs": [
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.055730500406405,
+              "DelayP50Hours": 39.151858284531386,
+              "DelayP95Hours": 68.97647140318142,
+              "DelayP99Hours": 71.41723843469424,
+              "WeightedDelayP95Hours": 69.46056507509013,
+              "StaleInstallPercent": 6.6904412953821835,
+              "StaleTimePercent": 5.79900621090566,
+              "UsefulPollPercent": 10.9715
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.268459929248834,
+              "DelayP50Hours": 39.32729203831855,
+              "DelayP95Hours": 69.03400025414544,
+              "DelayP99Hours": 71.43657516903022,
+              "WeightedDelayP95Hours": 68.81233403916849,
+              "StaleInstallPercent": 4.6083102569910475,
+              "StaleTimePercent": 5.806795872273609,
+              "UsefulPollPercent": 10.925166666666666
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.27118223122227,
+              "DelayP50Hours": 39.3988975795796,
+              "DelayP95Hours": 69.06388144046946,
+              "DelayP99Hours": 71.41832546556736,
+              "WeightedDelayP95Hours": 69.26555060025976,
+              "StaleInstallPercent": 7.1817987281443125,
+              "StaleTimePercent": 5.900583547478183,
+              "UsefulPollPercent": 11.100833333333334
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.05510212484159,
+              "DelayP50Hours": 39.00118138443804,
+              "DelayP95Hours": 68.9849440236469,
+              "DelayP99Hours": 71.43720681761478,
+              "WeightedDelayP95Hours": 69.10703963100104,
+              "StaleInstallPercent": 5.262979386343221,
+              "StaleTimePercent": 5.849562503467552,
+              "UsefulPollPercent": 11.067333333333334
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.08092431535622,
+              "DelayP50Hours": 39.1457619045716,
+              "DelayP95Hours": 68.93745305638703,
+              "DelayP99Hours": 71.32458726746813,
+              "WeightedDelayP95Hours": 70.52033456065692,
+              "StaleInstallPercent": 6.964555498038566,
+              "StaleTimePercent": 5.649816393852135,
+              "UsefulPollPercent": 10.682166666666667
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": {
+        "Name": "cold-start-no-interactions",
+        "Packages": 10000,
+        "ZipfExponent": 1,
+        "TopInstallsPerDay": 2000,
+        "ObservationDays": 30,
+        "InteractionsRecorded": false,
+        "ReleaseRateCorrelation": 0.5,
+        "MedianReleaseIntervalDays": 45,
+        "ReleaseIntervalSigma": 1.2
+      },
+      "policies": [
+        {
+          "policy": "Whey tiered",
+          "runs": [
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 9.89904111111111,
+              "DelayMeanHours": 1.701064578110222,
+              "DelayP50Hours": 0.6632851814199512,
+              "DelayP95Hours": 5.593933066401895,
+              "DelayP99Hours": 19.709408427824883,
+              "WeightedDelayP95Hours": 0.9756274864413967,
+              "StaleInstallPercent": 2.4277437072014747,
+              "StaleTimePercent": 0.36457121534470605,
+              "UsefulPollPercent": 0.5196126179224767
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 9.904004444444444,
+              "DelayMeanHours": 1.7363594273710103,
+              "DelayP50Hours": 0.668225356455082,
+              "DelayP95Hours": 5.6359437541434545,
+              "DelayP99Hours": 19.857643486730012,
+              "WeightedDelayP95Hours": 0.9784925350925846,
+              "StaleInstallPercent": 1.7389499876842016,
+              "StaleTimePercent": 0.36136372841948605,
+              "UsefulPollPercent": 0.5043190161914305
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 9.993577222222223,
+              "DelayMeanHours": 1.7093414038150503,
+              "DelayP50Hours": 0.6648793658062004,
+              "DelayP95Hours": 5.612895439518411,
+              "DelayP99Hours": 20.146328359379368,
+              "WeightedDelayP95Hours": 0.9864563080583366,
+              "StaleInstallPercent": 4.3441213344788885,
+              "StaleTimePercent": 0.36875875340265785,
+              "UsefulPollPercent": 0.5180883121653858
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 10.008553333333333,
+              "DelayMeanHours": 1.7194281045085082,
+              "DelayP50Hours": 0.6689455023261672,
+              "DelayP95Hours": 5.616968832866519,
+              "DelayP99Hours": 19.70503381030221,
+              "WeightedDelayP95Hours": 0.9884116432343717,
+              "StaleInstallPercent": 1.6122318482165265,
+              "StaleTimePercent": 0.3592171881669023,
+              "UsefulPollPercent": 0.5009715023749686
+            },
+            {
+              "Policy": "Whey tiered",
+              "CallsPerPackagePerDay": 9.819467777777778,
+              "DelayMeanHours": 1.7452681680513755,
+              "DelayP50Hours": 0.6748610710784533,
+              "DelayP95Hours": 5.648266531209515,
+              "DelayP99Hours": 19.87898118671137,
+              "WeightedDelayP95Hours": 0.9802949029451611,
+              "StaleInstallPercent": 4.005529548584547,
+              "StaleTimePercent": 0.3557034285283598,
+              "UsefulPollPercent": 0.4981374301684828
+            }
+          ]
+        },
+        {
+          "policy": "Uniform, same API budget",
+          "runs": [
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 9.899056666666667,
+              "DelayMeanHours": 1.2268358169457707,
+              "DelayP50Hours": 1.2323423312284234,
+              "DelayP95Hours": 2.3070427656453987,
+              "DelayP99Hours": 2.4002258285689777,
+              "WeightedDelayP95Hours": 2.3127044540060524,
+              "StaleInstallPercent": 5.157497659457759,
+              "StaleTimePercent": 0.25779171593345457,
+              "UsefulPollPercent": 0.5094480944368324
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 9.904007222222221,
+              "DelayMeanHours": 1.2230097552303438,
+              "DelayP50Hours": 1.2263999542328747,
+              "DelayP95Hours": 2.306898774272099,
+              "DelayP99Hours": 2.398850456190303,
+              "WeightedDelayP95Hours": 2.31888065610633,
+              "StaleInstallPercent": 3.7196028109099544,
+              "StaleTimePercent": 0.2521948032764571,
+              "UsefulPollPercent": 0.49969672769377915
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 9.993539444444444,
+              "DelayMeanHours": 1.2105815155942758,
+              "DelayP50Hours": 1.216422733235504,
+              "DelayP95Hours": 2.282922844611903,
+              "DelayP99Hours": 2.3781287212759707,
+              "WeightedDelayP95Hours": 2.333904326668403,
+              "StaleInstallPercent": 8.052164202545722,
+              "StaleTimePercent": 0.25650036543261723,
+              "UsefulPollPercent": 0.5088454090701153
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 10.008528333333334,
+              "DelayMeanHours": 1.206547447984015,
+              "DelayP50Hours": 1.2070644842992806,
+              "DelayP95Hours": 2.283327138586799,
+              "DelayP99Hours": 2.375765868730241,
+              "WeightedDelayP95Hours": 2.297757464377753,
+              "StaleInstallPercent": 3.313231764026625,
+              "StaleTimePercent": 0.24917718441386474,
+              "UsefulPollPercent": 0.495227653349635
+            },
+            {
+              "Policy": "Uniform, same API budget",
+              "CallsPerPackagePerDay": 9.819422777777778,
+              "DelayMeanHours": 1.2337210459110641,
+              "DelayP50Hours": 1.2406580039194068,
+              "DelayP95Hours": 2.3251262924815137,
+              "DelayP99Hours": 2.4214737530846833,
+              "WeightedDelayP95Hours": 2.3715835907897826,
+              "StaleInstallPercent": 7.780157702722457,
+              "StaleTimePercent": 0.247241124603482,
+              "UsefulPollPercent": 0.48981154753325906
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 1h",
+          "runs": [
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5035082755374771,
+              "DelayP50Hours": 0.5060711159349012,
+              "DelayP95Hours": 0.9506605727465285,
+              "DelayP99Hours": 0.9898322395921468,
+              "WeightedDelayP95Hours": 0.9537828758070646,
+              "StaleInstallPercent": 2.318364132458233,
+              "StaleTimePercent": 0.1081773543651286,
+              "UsefulPollPercent": 0.21484722222222222
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5006500752027072,
+              "DelayP50Hours": 0.5013343419761895,
+              "DelayP95Hours": 0.9495272908659445,
+              "DelayP99Hours": 0.9900167402061015,
+              "WeightedDelayP95Hours": 0.9536223586458163,
+              "StaleInstallPercent": 1.5973126571340706,
+              "StaleTimePercent": 0.10439597088966487,
+              "UsefulPollPercent": 0.20852083333333332
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.50348054627851,
+              "DelayP50Hours": 0.5050865035708227,
+              "DelayP95Hours": 0.9504934016795232,
+              "DelayP99Hours": 0.9901601233306963,
+              "WeightedDelayP95Hours": 0.9613936274995467,
+              "StaleInstallPercent": 4.1846535797131885,
+              "StaleTimePercent": 0.10882172584980901,
+              "UsefulPollPercent": 0.21613888888888888
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5000238562133741,
+              "DelayP50Hours": 0.49966574214568027,
+              "DelayP95Hours": 0.9499119601866823,
+              "DelayP99Hours": 0.9896912806549949,
+              "WeightedDelayP95Hours": 0.9488221353349218,
+              "StaleInstallPercent": 1.4386109630534694,
+              "StaleTimePercent": 0.10467281802996384,
+              "UsefulPollPercent": 0.20933564814814815
+            },
+            {
+              "Policy": "Uniform 1h",
+              "CallsPerPackagePerDay": 24,
+              "DelayMeanHours": 0.5021940867946025,
+              "DelayP50Hours": 0.502862621069653,
+              "DelayP95Hours": 0.9508064351998229,
+              "DelayP99Hours": 0.9898203482499639,
+              "WeightedDelayP95Hours": 0.9601073022265609,
+              "StaleInstallPercent": 3.885609533858828,
+              "StaleTimePercent": 0.10254989250155692,
+              "UsefulPollPercent": 0.2042037037037037
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 6h",
+          "runs": [
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.0743946686246715,
+              "DelayP50Hours": 3.109135156291188,
+              "DelayP95Hours": 5.72429627967653,
+              "DelayP99Hours": 5.943510259772211,
+              "WeightedDelayP95Hours": 5.790158227666723,
+              "StaleInstallPercent": 10.76418902278547,
+              "StaleTimePercent": 0.6205864904940008,
+              "UsefulPollPercent": 1.211138888888889
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.033999447446949,
+              "DelayP50Hours": 3.0493359226712116,
+              "DelayP95Hours": 5.716287885211557,
+              "DelayP99Hours": 5.949101695264744,
+              "WeightedDelayP95Hours": 5.774776622459058,
+              "StaleInstallPercent": 8.246343146285984,
+              "StaleTimePercent": 0.6097917500556216,
+              "UsefulPollPercent": 1.2059166666666667
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.053823465869083,
+              "DelayP50Hours": 3.083076692407758,
+              "DelayP95Hours": 5.717370843842275,
+              "DelayP99Hours": 5.943680251423302,
+              "WeightedDelayP95Hours": 5.894072119041425,
+              "StaleInstallPercent": 13.623263061210109,
+              "StaleTimePercent": 0.624054480478983,
+              "UsefulPollPercent": 1.2261111111111112
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.0436998978536454,
+              "DelayP50Hours": 3.0681763030818274,
+              "DelayP95Hours": 5.717281061734852,
+              "DelayP99Hours": 5.944634069074766,
+              "WeightedDelayP95Hours": 5.7944571672571215,
+              "StaleInstallPercent": 7.434570418792707,
+              "StaleTimePercent": 0.6103463767390462,
+              "UsefulPollPercent": 1.2031666666666667
+            },
+            {
+              "Policy": "Uniform 6h",
+              "CallsPerPackagePerDay": 4,
+              "DelayMeanHours": 3.0533976832260006,
+              "DelayP50Hours": 3.0743710188686464,
+              "DelayP95Hours": 5.7130942169928005,
+              "DelayP99Hours": 5.941628437872623,
+              "WeightedDelayP95Hours": 5.873104203301182,
+              "StaleInstallPercent": 13.609013112922533,
+              "StaleTimePercent": 0.5918290467813941,
+              "UsefulPollPercent": 1.1629583333333333
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 24h",
+          "runs": [
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.480098201322436,
+              "DelayP50Hours": 12.69798389490768,
+              "DelayP95Hours": 22.98874174802347,
+              "DelayP99Hours": 23.80526235001291,
+              "WeightedDelayP95Hours": 23.576112659478667,
+              "StaleInstallPercent": 25.92156052154311,
+              "StaleTimePercent": 2.259591113228319,
+              "UsefulPollPercent": 4.3453333333333335
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.477883739160136,
+              "DelayP50Hours": 12.747150278039044,
+              "DelayP95Hours": 22.947106529255052,
+              "DelayP99Hours": 23.788286641311686,
+              "WeightedDelayP95Hours": 23.502209941622368,
+              "StaleInstallPercent": 22.031096184699635,
+              "StaleTimePercent": 2.2701083208230304,
+              "UsefulPollPercent": 4.366333333333333
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.516848665490699,
+              "DelayP50Hours": 12.765293467353956,
+              "DelayP95Hours": 22.970664579736564,
+              "DelayP99Hours": 23.804456054217894,
+              "WeightedDelayP95Hours": 23.828694831648818,
+              "StaleInstallPercent": 25.949337150876403,
+              "StaleTimePercent": 2.306866798724644,
+              "UsefulPollPercent": 4.423222222222222
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.484331670841733,
+              "DelayP50Hours": 12.692398987849856,
+              "DelayP95Hours": 22.95655013604744,
+              "DelayP99Hours": 23.79493315642162,
+              "WeightedDelayP95Hours": 23.467025270315844,
+              "StaleInstallPercent": 20.630602914119127,
+              "StaleTimePercent": 2.2692295735868138,
+              "UsefulPollPercent": 4.362388888888889
+            },
+            {
+              "Policy": "Uniform 24h",
+              "CallsPerPackagePerDay": 1,
+              "DelayMeanHours": 12.440226319614888,
+              "DelayP50Hours": 12.649702066630084,
+              "DelayP95Hours": 22.960033575136322,
+              "DelayP99Hours": 23.790837122201765,
+              "WeightedDelayP95Hours": 23.747518968188274,
+              "StaleInstallPercent": 25.974856865889052,
+              "StaleTimePercent": 2.1834325000135175,
+              "UsefulPollPercent": 4.2123333333333335
+            }
+          ]
+        },
+        {
+          "policy": "Uniform 3d",
+          "runs": [
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.73436654040844,
+              "DelayP50Hours": 40.0381669732144,
+              "DelayP95Hours": 69.30194784122978,
+              "DelayP99Hours": 71.46926541129369,
+              "WeightedDelayP95Hours": 71.4541295366991,
+              "StaleInstallPercent": 40.81053779354141,
+              "StaleTimePercent": 5.9464425670367955,
+              "UsefulPollPercent": 11.053333333333333
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.877662749737674,
+              "DelayP50Hours": 40.36387760626761,
+              "DelayP95Hours": 69.25165588734075,
+              "DelayP99Hours": 71.45432453965645,
+              "WeightedDelayP95Hours": 71.12224815882564,
+              "StaleInstallPercent": 37.3828494019207,
+              "StaleTimePercent": 5.97339089123567,
+              "UsefulPollPercent": 11.0625
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.84404287229664,
+              "DelayP50Hours": 40.284476541683375,
+              "DelayP95Hours": 69.31160557381284,
+              "DelayP99Hours": 71.4704112142499,
+              "WeightedDelayP95Hours": 71.67144268648633,
+              "StaleInstallPercent": 39.57754966242908,
+              "StaleTimePercent": 6.060659772503247,
+              "UsefulPollPercent": 11.233833333333333
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.726114101340606,
+              "DelayP50Hours": 39.910340921186815,
+              "DelayP95Hours": 69.22640349359267,
+              "DelayP99Hours": 71.51502553785281,
+              "WeightedDelayP95Hours": 71.20988264456957,
+              "StaleInstallPercent": 35.75193308324782,
+              "StaleTimePercent": 5.996003689574921,
+              "UsefulPollPercent": 11.147833333333333
+            },
+            {
+              "Policy": "Uniform 3d",
+              "CallsPerPackagePerDay": 0.3333333333333333,
+              "DelayMeanHours": 38.677614625273094,
+              "DelayP50Hours": 40.00302943611473,
+              "DelayP95Hours": 69.26249450062528,
+              "DelayP99Hours": 71.44657145855342,
+              "WeightedDelayP95Hours": 71.69057404498471,
+              "StaleInstallPercent": 39.35850492034673,
+              "StaleTimePercent": 5.800030626514897,
+              "UsefulPollPercent": 10.797
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

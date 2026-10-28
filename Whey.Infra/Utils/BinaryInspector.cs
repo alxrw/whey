@@ -1,3 +1,5 @@
+using System.Buffers.Binary;
+
 namespace Whey.Infra.Utils;
 
 public enum BinaryType
@@ -10,79 +12,100 @@ public enum BinaryType
 
 public static class BinaryInspector
 {
-    private const int NumBytesToRead = 4;
-    private static readonly byte[] MagicExe = [0x4D, 0x5A];
-    private static readonly byte[] MagicElf = [0x7F, 0x45, 0x4C, 0x46]; // 52 byte min header, possibly unimportant?
-    private static readonly byte[][] MagicMachos = [
-        [0xFE, 0xED, 0xFA, 0xCE],
-        [0xFE, 0xED, 0xFA, 0xCF],
-        [0xCE, 0xFA, 0xED, 0xFE],
-        [0xCF, 0xFA, 0xED, 0xFE],
-    ];
+    private const int HeaderSize = 64; // DOS header size; also covers every other format's magic + fat header count
+    private const int PeSignatureOffsetField = 0x3C;
+    private static readonly byte[] MagicElf = [0x7F, 0x45, 0x4C, 0x46];
+    private static readonly byte[] PeSignature = [(byte)'P', (byte)'E', 0, 0];
+
+    // Thin Mach-O, both endiannesses, 32 and 64 bit.
+    private static readonly uint[] MachoThinMagics = [0xFEEDFACE, 0xFEEDFACF, 0xCEFAEDFE, 0xCFFAEDFE];
+    private const uint FatMagic = 0xCAFEBABE; // shared with Java class files
+    private const uint Fat64Magic = 0xCAFEBABF;
+    // A Java class file stores (minor << 16 | major) here, and major >= 45; a fat header stores the architecture count.
+    private const uint MaxFatArchCount = 44;
 
     public static BinaryType GetBinaryExecutableType(string filepath)
     {
-        var fs = File.OpenRead(filepath);
-        var bytes = GetBytes(fs, NumBytesToRead);
+        using var fs = File.OpenRead(filepath);
+        Span<byte> header = stackalloc byte[HeaderSize];
+        int read = fs.ReadAtLeast(header, HeaderSize, throwOnEndOfStream: false);
+        header = header[..read];
 
-        if (MagicExe.SequenceEqual(bytes[0..2]))
+        if (header.Length < 4)
         {
-            return BinaryType.Exe;
+            return BinaryType.Unknown;
         }
-        else if (MagicElf.SequenceEqual(bytes))
+
+        if (header[..4].SequenceEqual(MagicElf))
         {
             return BinaryType.Elf;
         }
-        else
+
+        uint magic = BinaryPrimitives.ReadUInt32BigEndian(header);
+        if (Array.IndexOf(MachoThinMagics, magic) >= 0 || magic == Fat64Magic)
         {
-            foreach (byte[] magic in MagicMachos)
-            {
-                if (magic.SequenceEqual(bytes))
-                {
-                    return BinaryType.Macho;
-                }
-            }
+            return BinaryType.Macho;
+        }
+        if (magic == FatMagic && header.Length >= 8)
+        {
+            uint archs = BinaryPrimitives.ReadUInt32BigEndian(header[4..]);
+            return archs is >= 1 and <= MaxFatArchCount ? BinaryType.Macho : BinaryType.Unknown;
+        }
+
+        if (header[0] == 'M' && header[1] == 'Z' && IsPortableExecutable(fs, header))
+        {
+            return BinaryType.Exe;
         }
 
         return BinaryType.Unknown;
     }
 
-    // walks directories until all binaries are found
-    // WARNING: recursion.
+    // "MZ" alone is two printable characters; require the PE signature the DOS header points at.
+    private static bool IsPortableExecutable(FileStream fs, ReadOnlySpan<byte> header)
+    {
+        if (header.Length < PeSignatureOffsetField + 4)
+        {
+            return false;
+        }
+
+        uint peOffset = BinaryPrimitives.ReadUInt32LittleEndian(header[PeSignatureOffsetField..]);
+        if (peOffset > fs.Length - PeSignature.Length)
+        {
+            return false;
+        }
+
+        Span<byte> sig = stackalloc byte[4];
+        fs.Seek(peOffset, SeekOrigin.Begin);
+        return fs.ReadAtLeast(sig, sig.Length, throwOnEndOfStream: false) == sig.Length && sig.SequenceEqual(PeSignature);
+    }
+
+    // Finds all binaries under topDir. Symlinks are skipped: they would otherwise let an archive
+    // point the walk outside the extraction directory, or into a cycle.
     public static List<string> FindBinaries(string topDir)
     {
-        var res = new List<string>();
-        var fileEntries = Directory.EnumerateFiles(topDir);
-        foreach (string path in fileEntries)
+        var options = new EnumerationOptions
         {
-            var type = GetBinaryExecutableType(path);
-            if (type != BinaryType.Unknown)
+            RecurseSubdirectories = true,
+            AttributesToSkip = FileAttributes.ReparsePoint,
+            IgnoreInaccessible = true,
+        };
+
+        var res = new List<string>();
+        foreach (string path in Directory.EnumerateFiles(topDir, "*", options))
+        {
+            try
             {
-                res.Add(path);
+                if (GetBinaryExecutableType(path) != BinaryType.Unknown)
+                {
+                    res.Add(path);
+                }
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+            {
+                // unreadable file: can't be analysed, don't fail the whole release over it
             }
         }
 
-        var dirEntries = Directory.EnumerateDirectories(topDir);
-        foreach (string path in dirEntries)
-        {
-            var subPaths = FindBinaries(path);
-            res.AddRange(subPaths);
-        }
-
         return res;
-    }
-
-    private static byte[] GetBytes(Stream fileStream, int numBytes)
-    {
-        if (fileStream is null || fileStream.Position != 0 || !fileStream.CanRead)
-        {
-            // TODO: log this
-            return [];
-        }
-
-        var buffer = new byte[numBytes];
-        fileStream.ReadExactly(buffer);
-
-        return buffer;
     }
 }

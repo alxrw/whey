@@ -1,0 +1,128 @@
+{
+  "env": {
+    "os": "Ubuntu 22.04.5 LTS",
+    "runtime": ".NET 10.0.13",
+    "cores": 16,
+    "date": "2026-10-28"
+  },
+  "accuracy": {
+    "files": 3935,
+    "threw": 0,
+    "perClass": [
+      {
+        "cls": "Elf",
+        "support": 983,
+        "tp": 983,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1,
+        "recall": 1
+      },
+      {
+        "cls": "Exe",
+        "support": 759,
+        "tp": 759,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1,
+        "recall": 1
+      },
+      {
+        "cls": "Macho",
+        "support": 3,
+        "tp": 3,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1,
+        "recall": 1
+      }
+    ],
+    "misclassified": {}
+  },
+  "synthetic": [
+    {
+      "name": "Mach-O 64 LE (thin)",
+      "expected": "Macho",
+      "actual": "Macho",
+      "ok": true
+    },
+    {
+      "name": "Mach-O universal / fat (0xCAFEBABE)",
+      "expected": "Macho",
+      "actual": "Macho",
+      "ok": true
+    },
+    {
+      "name": "Mach-O universal / fat64 (0xCAFEBABF)",
+      "expected": "Macho",
+      "actual": "Macho",
+      "ok": true
+    },
+    {
+      "name": "Plain text starting with \u0022MZ\u0022",
+      "expected": "Unknown",
+      "actual": "Unknown",
+      "ok": true
+    },
+    {
+      "name": "Java .class (0xCAFEBABE)",
+      "expected": "Unknown",
+      "actual": "Unknown",
+      "ok": true
+    },
+    {
+      "name": "Empty file (0 bytes)",
+      "expected": "Unknown",
+      "actual": "Unknown",
+      "ok": true
+    },
+    {
+      "name": "3-byte file",
+      "expected": "Unknown",
+      "actual": "Unknown",
+      "ok": true
+    },
+    {
+      "name": "FindBinaries with empty file",
+      "expected": "1 binary found",
+      "actual": "1 binary found",
+      "ok": true
+    }
+  ],
+  "throughput": [
+    {
+      "files": 1000,
+      "ms": 7.261,
+      "filesPerSec": 137722.0768489189,
+      "binaries": 50,
+      "leakedFdsBeforeGc": 0,
+      "leakedFdsAfterGc": 0,
+      "error": ""
+    },
+    {
+      "files": 10000,
+      "ms": 89.634,
+      "filesPerSec": 111564.80799696544,
+      "binaries": 500,
+      "leakedFdsBeforeGc": 0,
+      "leakedFdsAfterGc": 0,
+      "error": ""
+    },
+    {
+      "files": 50000,
+      "ms": 422.2675,
+      "filesPerSec": 118408.35489352127,
+      "binaries": 2500,
+      "leakedFdsBeforeGc": 0,
+      "leakedFdsAfterGc": 0,
+      "error": ""
+    }
+  ],
+  "deps": {
+    "files": 120,
+    "agreementPercent": 100,
+    "latencyP50Ms": 12.466149999999999,
+    "latencyP95Ms": 15.230604999999999,
+    "parseMicros": 2.46322
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "env": {
+    "os": "Ubuntu 22.04.5 LTS",
+    "runtime": ".NET 10.0.13",
+    "cores": 16,
+    "date": "2026-10-28"
+  },
+  "results": [
+    {
+      "name": "Classify one file (4-byte magic read)",
+      "meanNs": 147260.5461613582,
+      "stdNs": 933.369662186202,
+      "opsPerSec": 6790.6851228452415,
+      "allocBytes": 4416
+    },
+    {
+      "name": "Ed25519 public-key import \u002B verify (as the interceptor does)",
+      "meanNs": 41842.442810058594,
+      "stdNs": 568.9052627758488,
+      "opsPerSec": 23899.17827072008,
+      "allocBytes": 56
+    },
+    {
+      "name": "Ed25519 sign (client side)",
+      "meanNs": 13972.949370247978,
+      "stdNs": 126.27327062948434,
+      "opsPerSec": 71566.85202976965,
+      "allocBytes": 88
+    },
+    {
+      "name": "Ed25519 verify (per authenticated request)",
+      "meanNs": 41147.77072347005,
+      "stdNs": 408.7152763975524,
+      "opsPerSec": 24302.653155146883,
+      "allocBytes": 0
+    },
+    {
+      "name": "Parse objdump -p output (NEEDED regex)",
+      "meanNs": 1492.7774753570557,
+      "stdNs": 20.74886496756669,
+      "opsPerSec": 669892.2086567599,
+      "allocBytes": 2656
+    },
+    {
+      "name": "SelectReleaseAsset, 40-asset release",
+      "meanNs": 5154.754896310659,
+      "stdNs": 44.88991518112349,
+      "opsPerSec": 193995.6448202253,
+      "allocBytes": 10920
+    },
+    {
+      "name": "SelectReleaseAsset, 5-asset release",
+      "meanNs": 921.9102244743934,
+      "stdNs": 12.534450192130583,
+      "opsPerSec": 1084704.3165945227,
+      "allocBytes": 2832
+    },
+    {
+      "name": "SHA-256 of 200 B request body",
+      "meanNs": 413.3314201434453,
+      "stdNs": 3.02238126115091,
+      "opsPerSec": 2419366.0371934786,
+      "allocBytes": 56
+    }
+  ]
+}

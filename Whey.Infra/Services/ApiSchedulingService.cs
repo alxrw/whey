@@ -88,7 +88,7 @@ public class ApiSchedulingService : IApiSchedulingService
 			numPkg = 1;
 		}
 
-		double percentile = 1.0 - ((double)higher / numPkg);
+		double percentile = InteractionPercentile(total, higher, numPkg);
 		TimeSpan? age = DateTimeOffset.UtcNow - pkg.LastReleased;
 		if (age is null)
 		{
@@ -96,27 +96,36 @@ public class ApiSchedulingService : IApiSchedulingService
 			return DateTimeOffset.UnixEpoch;
 		}
 
+		return DateTimeOffset.UtcNow.Add(SelectInterval(percentile, age.Value.TotalDays));
+	}
+
+	// 1.0 is the most-interacted-with package. Packages with no interactions have no popularity signal:
+	// without this rule they all tie as "nobody has more", i.e. percentile 1.0, and would all be polled hourly.
+	internal static double InteractionPercentile(long total, int higherCount, int packageCount) =>
+		total <= 0 ? 0.0 : 1.0 - ((double)higherCount / Math.Max(1, packageCount));
+
+	// Pure tier selection. percentile is in (0, 1], where 1.0 is the most-interacted-with package.
+	internal static TimeSpan SelectInterval(double percentile, double ageDays)
+	{
 		const int T1_DAYS = 14, T2_DAYS = 90, T3_DAYS = 365;
 		const double T1_P = 0.95, T2_P = 0.75, T3_P = 0.5;
 
-		double ageDouble = age.Value.TotalDays;
-
-		if (ageDouble <= T1_DAYS || percentile >= T1_P)
+		if (ageDays <= T1_DAYS || percentile >= T1_P)
 		{
-			return DateTimeOffset.UtcNow.Add(TIER1);
+			return TIER1;
 		}
-		if (ageDouble <= T2_DAYS || percentile >= T2_P)
+		if (ageDays <= T2_DAYS || percentile >= T2_P)
 		{
-			return DateTimeOffset.UtcNow.Add(TIER2);
+			return TIER2;
 		}
-		if (ageDouble <= T3_DAYS || percentile >= T3_P)
+		if (ageDays <= T3_DAYS || percentile >= T3_P)
 		{
-			return DateTimeOffset.UtcNow.Add(TIER3);
+			return TIER3;
 		}
-		if (ageDouble >= T3_DAYS || percentile <= T3_P)
+		if (ageDays >= T3_DAYS || percentile <= T3_P)
 		{
-			return DateTimeOffset.UtcNow.Add(TIER4);
+			return TIER4;
 		}
-		return DateTimeOffset.UtcNow.Add(TIER3);
+		return TIER3;
 	}
 }

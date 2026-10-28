@@ -1,0 +1,82 @@
+{
+  "env": {
+    "os": "Ubuntu 22.04.5 LTS",
+    "runtime": ".NET 10.0.13",
+    "cores": 16,
+    "date": "2026-10-28"
+  },
+  "throughput": [
+    {
+      "rpc": "ReportInstall (auth \u002B limiter \u002B handler \u002B EF)",
+      "concurrency": 1,
+      "rps": 863.6666666666666,
+      "p50": 1.06055,
+      "p95": 2.289275,
+      "p99": 3.4640149999999967,
+      "errors": 0
+    },
+    {
+      "rpc": "ReportInstall (auth \u002B limiter \u002B handler \u002B EF)",
+      "concurrency": 16,
+      "rps": 2211.3333333333335,
+      "p50": 0.8532,
+      "p95": 5.214419999999988,
+      "p99": 152.478555,
+      "errors": 0
+    },
+    {
+      "rpc": "ReportInstall (auth \u002B limiter \u002B handler \u002B EF)",
+      "concurrency": 64,
+      "rps": 2101,
+      "p50": 18.9244,
+      "p95": 157.9683,
+      "p99": 205.8899350000001,
+      "errors": 0
+    },
+    {
+      "rpc": "Challenge (public path: skips auth \u002B limiter)",
+      "concurrency": 1,
+      "rps": 8316,
+      "p50": 0.1084,
+      "p95": 0.1554,
+      "p99": 0.19290500000000027,
+      "errors": 0
+    },
+    {
+      "rpc": "Challenge (public path: skips auth \u002B limiter)",
+      "concurrency": 16,
+      "rps": 89152.83333333333,
+      "p50": 0.0464,
+      "p95": 0.2422,
+      "p99": 3.3555,
+      "errors": 0
+    },
+    {
+      "rpc": "Challenge (public path: skips auth \u002B limiter)",
+      "concurrency": 64,
+      "rps": 57757.833333333336,
+      "p50": 0.2483,
+      "p95": 5.904070000000001,
+      "p99": 8.966307999999996,
+      "errors": 0
+    }
+  ],
+  "rateLimit": {
+    "elapsed": 16.8859087,
+    "offeredRps": 8160.295217040939,
+    "admitted": 124,
+    "rejected": 137670,
+    "other": 0,
+    "expectedLo": 119.42954350000001,
+    "expectedHi": 134.42954350000002,
+    "admittedP50": 2002.3914,
+    "rejectP50": 1.5239500000000001
+  },
+  "isolation": {
+    "baselineSuccess": 100,
+    "contendedSuccess": 100,
+    "baselineP99": 4.94832,
+    "contendedP99": 92.59180799999973,
+    "abuserRps": 8675.333333333334
+  }
+}

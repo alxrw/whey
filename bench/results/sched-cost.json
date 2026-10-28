@@ -1,0 +1,32 @@
+{
+  "env": {
+    "os": "Ubuntu 22.04.5 LTS",
+    "runtime": ".NET 10.0.13",
+    "cores": 16,
+    "date": "2026-10-28"
+  },
+  "engine": "sqlite",
+  "results": [
+    {
+      "packages": 1000,
+      "perCallMeanMs": 0.3517715000000001,
+      "perCallP99Ms": 0.549718999999993,
+      "fullPassSeconds": 0.3517715000000001,
+      "singlePassMs": 31.5086
+    },
+    {
+      "packages": 5000,
+      "perCallMeanMs": 0.5045155000000002,
+      "perCallP99Ms": 1.0701179999999972,
+      "fullPassSeconds": 2.522577500000001,
+      "singlePassMs": 9.5902
+    },
+    {
+      "packages": 20000,
+      "perCallMeanMs": 0.40175100000000014,
+      "perCallP99Ms": 0.6052749999999998,
+      "fullPassSeconds": 8.035020000000003,
+      "singlePassMs": 42.979
+    }
+  ]
+}

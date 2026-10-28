@@ -11,3 +11,7 @@ Whey is a backend registry service for [Parm](https://github.com/alxrw/parm). It
 Before running, ensure you have Docker and Docker Compose installed.
 
 Run `docker-compose up --build -d`
+
+## Benchmarks
+
+`Whey.Benchmarks` measures scheduler effectiveness, binary-analysis correctness, gRPC rate limiting and hot-path costs. See [`bench/README.md`](bench/README.md) for what each metric means and how to run it, and [`bench/results/summary.md`](bench/results/summary.md) for the latest numbers.

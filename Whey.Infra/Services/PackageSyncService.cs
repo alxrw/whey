@@ -111,6 +111,9 @@ public class PackageSyncService : IPackageSyncService
                 throw new ArgumentNullException("could not find env var WHEY_CONTAINER_NAME");
 
 
+            // Union of shared-library dependencies across every ELF in the release.
+            var linuxDeps = new SortedSet<string>(StringComparer.Ordinal);
+
             // should we be parallelizing downloads?
             foreach (ReleaseAsset asset in assets)
             {
@@ -159,14 +162,12 @@ public class PackageSyncService : IPackageSyncService
                     // Find dependencies w/ objdump (Linux only)
                     if (extractPath is not null)
                     {
-                        var bins = BinaryInspector.FindBinaries(extractPath);
-                        foreach (string bin in bins)
+                        foreach (string bin in BinaryInspector.FindBinaries(extractPath))
                         {
-                            // can only do this for Linux, as server runs only on Linux
-                            var deps = DependencyFinderService.GetLibsLinux(bin);
-                            if (deps.Length != 0 && package.Dependencies.ContainsKey(Platform.Linux))
+                            // objdump runs on this (Linux) server, so only ELF files can be analysed.
+                            if (BinaryInspector.GetBinaryExecutableType(bin) == BinaryType.Elf)
                             {
-                                package.Dependencies[Platform.Linux] = deps;
+                                linuxDeps.UnionWith(DependencyFinderService.GetLibsLinux(bin));
                             }
                         }
                     }
@@ -183,6 +184,11 @@ public class PackageSyncService : IPackageSyncService
                         Directory.Delete(jobDir, recursive: true);
                     }
                 }
+            }
+
+            if (linuxDeps.Count > 0)
+            {
+                package.Dependencies[Platform.Linux] = [.. linuxDeps];
             }
 
             // map platforms/archs to respective assets

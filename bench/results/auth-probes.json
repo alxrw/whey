@@ -1,0 +1,114 @@
+{
+  "env": {
+    "os": "Ubuntu 22.04.5 LTS",
+    "runtime": ".NET 10.0.13",
+    "cores": 16,
+    "date": "2026-10-28"
+  },
+  "probes": [
+    {
+      "probe": "Register first client",
+      "expected": "OK",
+      "actual": "OK",
+      "ok": true
+    },
+    {
+      "probe": "Register a second, distinct client",
+      "expected": "OK",
+      "actual": "OK",
+      "ok": true
+    },
+    {
+      "probe": "Re-register an existing key",
+      "expected": "AlreadyExists",
+      "actual": "AlreadyExists: public key is already registered",
+      "ok": true
+    },
+    {
+      "probe": "Stored key is the client\u0027s public key",
+      "expected": "54060F6B0FF0DB085B184356A9C5F1970EE4469EEE493310FDA205135B9FC8C2",
+      "actual": "54060F6B,679F86EC",
+      "ok": true
+    },
+    {
+      "probe": "Correctly signed request from a registered client",
+      "expected": "OK",
+      "actual": "OK",
+      "ok": true
+    },
+    {
+      "probe": "ReportInstall increments the package\u0027s TotalInteractions (scheduler input)",
+      "expected": "1",
+      "actual": "1",
+      "ok": true
+    },
+    {
+      "probe": "ReportInstall for an untracked package",
+      "expected": "NotFound",
+      "actual": "NotFound: Package is not tracked.",
+      "ok": true
+    },
+    {
+      "probe": "No credentials",
+      "expected": "Unauthenticated",
+      "actual": "Unauthenticated: Auth headers missing",
+      "ok": true
+    },
+    {
+      "probe": "Signed body swapped after signing (tampered payload)",
+      "expected": "Unauthenticated",
+      "actual": "Unauthenticated: Invalid signature",
+      "ok": true
+    },
+    {
+      "probe": "Signature made by a different key",
+      "expected": "Unauthenticated",
+      "actual": "Unauthenticated: Invalid signature",
+      "ok": true
+    },
+    {
+      "probe": "Signature for a different method",
+      "expected": "Unauthenticated",
+      "actual": "Unauthenticated: Invalid signature",
+      "ok": true
+    },
+    {
+      "probe": "Valid key \u002B signature, unregistered client",
+      "expected": "Unauthenticated",
+      "actual": "Unauthenticated: Client unregistered",
+      "ok": true
+    },
+    {
+      "probe": "Timestamp 10 minutes old (stale)",
+      "expected": "Unauthenticated",
+      "actual": "Unauthenticated: Stale or invalid timestamp",
+      "ok": true
+    },
+    {
+      "probe": "Timestamp 10 minutes ahead",
+      "expected": "Unauthenticated",
+      "actual": "Unauthenticated: Stale or invalid timestamp",
+      "ok": true
+    },
+    {
+      "probe": "Nonce used for the first time",
+      "expected": "OK",
+      "actual": "OK",
+      "ok": true
+    },
+    {
+      "probe": "Exact replay of that request",
+      "expected": "Unauthenticated",
+      "actual": "Unauthenticated: Nonce already used",
+      "ok": true
+    },
+    {
+      "probe": "Garbage public key / signature bytes",
+      "expected": "Unauthenticated",
+      "actual": "Unauthenticated: Invalid signature",
+      "ok": true
+    }
+  ],
+  "attacksRejected": 9,
+  "attacks": 9
+}

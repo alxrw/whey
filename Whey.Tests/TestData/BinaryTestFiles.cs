@@ -8,8 +8,24 @@ public static class BinaryTestFiles
     // ELF magic bytes: 0x7F 'E' 'L' 'F'
     public static readonly byte[] ElfMagic = [0x7F, 0x45, 0x4C, 0x46, 0x02, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
-    // PE/EXE magic bytes: 'M' 'Z'
-    public static readonly byte[] ExeMagic = [0x4D, 0x5A, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00];
+    // Minimal PE: 64-byte DOS header ("MZ", e_lfanew = 0x40) followed by the "PE\0\0" signature.
+    public static readonly byte[] ExeMagic = BuildMinimalPe();
+
+    private static byte[] BuildMinimalPe()
+    {
+        var pe = new byte[0x44];
+        pe[0] = 0x4D; pe[1] = 0x5A;
+        pe[0x3C] = 0x40;
+        pe[0x40] = (byte)'P'; pe[0x41] = (byte)'E';
+        return pe;
+    }
+
+    // "MZ" with no PE header behind it, e.g. a text file that happens to start with those letters.
+    public static readonly byte[] MzOnly = "MZ is not a PE file\n"u8.ToArray();
+
+    // Mach-O universal (fat) header, 2 architectures; and a Java class file, which shares the 0xCAFEBABE magic.
+    public static readonly byte[] MachoFat = [0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x02, 0, 0, 0, 0, 0, 0, 0, 0];
+    public static readonly byte[] JavaClass = [0xCA, 0xFE, 0xBA, 0xBE, 0x00, 0x00, 0x00, 0x34, 0, 0, 0, 0, 0, 0, 0, 0];
 
     // Mach-O 64-bit magic bytes (little endian): 0xCF 0xFA 0xED 0xFE
     public static readonly byte[] MachoMagic64Le = [0xCF, 0xFA, 0xED, 0xFE, 0x07, 0x00, 0x00, 0x01, 0x03, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00];

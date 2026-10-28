@@ -162,4 +162,73 @@ public class BinaryInspectorTests : IDisposable
 
         result.Should().HaveCount(3);
     }
+
+    [Theory]
+    [MemberData(nameof(NonBinaryContents))]
+    public void GetBinaryExecutableType_NotABinary_ReturnsUnknown(byte[] contents)
+    {
+        var path = BinaryTestFiles.CreateTempFile(contents);
+        _tempFiles.Add(path);
+
+        BinaryInspector.GetBinaryExecutableType(path).Should().Be(BinaryType.Unknown);
+    }
+
+    public static TheoryData<byte[]> NonBinaryContents => new()
+    {
+        { [] },
+        { [0x7F] },
+        { [1, 2, 3] },
+        { BinaryTestFiles.MzOnly },
+        { BinaryTestFiles.JavaClass },
+    };
+
+    [Fact]
+    public void GetBinaryExecutableType_UniversalMachO_ReturnsMacho()
+    {
+        var path = BinaryTestFiles.CreateTempFile(BinaryTestFiles.MachoFat);
+        _tempFiles.Add(path);
+
+        BinaryInspector.GetBinaryExecutableType(path).Should().Be(BinaryType.Macho);
+    }
+
+    [Fact]
+    public void FindBinaries_EmptyAndTinyFiles_AreSkippedNotFatal()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        Directory.CreateDirectory(dir);
+        _tempDirs.Add(dir);
+        File.WriteAllBytes(Path.Combine(dir, ".keep"), []);
+        File.WriteAllBytes(Path.Combine(dir, "tiny"), [1]);
+        File.WriteAllBytes(Path.Combine(dir, "app"), BinaryTestFiles.ElfMagic);
+
+        BinaryInspector.FindBinaries(dir).Should().ContainSingle().Which.Should().EndWith("app");
+    }
+
+    [Fact]
+    public void FindBinaries_DoesNotFollowSymlinks()
+    {
+        var dir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        var outside = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        Directory.CreateDirectory(dir);
+        Directory.CreateDirectory(outside);
+        _tempDirs.Add(dir);
+        _tempDirs.Add(outside);
+        File.WriteAllBytes(Path.Combine(outside, "secret-bin"), BinaryTestFiles.ElfMagic);
+        Directory.CreateSymbolicLink(Path.Combine(dir, "escape"), outside);
+        Directory.CreateSymbolicLink(Path.Combine(dir, "loop"), dir);
+
+        BinaryInspector.FindBinaries(dir).Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetBinaryExecutableType_ReleasesFileHandle()
+    {
+        var path = BinaryTestFiles.CreateTempFile(BinaryTestFiles.ElfMagic);
+        _tempFiles.Add(path);
+
+        BinaryInspector.GetBinaryExecutableType(path);
+
+        // An exclusive open fails if the inspector still holds the file.
+        using var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+    }
 }

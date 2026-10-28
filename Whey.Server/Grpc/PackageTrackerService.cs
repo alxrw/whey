@@ -1,5 +1,4 @@
 using Grpc.Core;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Octokit;
 using Quartz;
@@ -13,7 +12,6 @@ namespace Whey.Server.Grpc;
 
 using WheyPackage = Core.Models.Package;
 
-[Authorize]
 public class PackageTrackerServiceImpl : PackageTrackerService.PackageTrackerServiceBase
 {
 	private readonly WheyContext _db;
@@ -83,10 +81,29 @@ public class PackageTrackerServiceImpl : PackageTrackerService.PackageTrackerSer
 
 	public override async Task<ReportInstallResponse> ReportInstall(ReportInstallRequest request, ServerCallContext context)
 	{
-		var pkg = await _db.Packages
-			.FirstOrDefaultAsync(p => p.Owner == request.Owner && p.Repo == request.Repo);
+		var pkgId = await _db.Packages
+			.AsNoTracking()
+			.Where(p => p.Owner == request.Owner && p.Repo == request.Repo)
+			.Select(p => (Guid?)p.Id)
+			.FirstOrDefaultAsync(context.CancellationToken);
 
-		// TODO: do something, increment download metrics
+		if (pkgId is null)
+		{
+			throw new RpcException(new global::Grpc.Core.Status(StatusCode.NotFound, "Package is not tracked."));
+		}
+
+		// The counter drives sync scheduling, so bump it atomically; concurrent reports must not lose updates.
+		await _db.PackageStats
+			.Where(s => s.PackageId == pkgId)
+			.ExecuteUpdateAsync(u => u.SetProperty(s => s.TotalInteractions, s => s.TotalInteractions + 1), context.CancellationToken);
+
+		// The hourly history is best-effort detail; it does not touch TotalInteractions.
+		var stats = await _db.PackageStats.FirstOrDefaultAsync(s => s.PackageId == pkgId, context.CancellationToken);
+		if (stats is not null)
+		{
+			stats.Installs.Track();
+			await _db.SaveChangesAsync(context.CancellationToken);
+		}
 
 		return new ReportInstallResponse();
 	}

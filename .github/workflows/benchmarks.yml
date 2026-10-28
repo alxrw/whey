@@ -1,0 +1,35 @@
+name: benchmarks
+
+# Not part of the PR gate: benchmarks are slow and machine-dependent.
+# Run on demand, and weekly so drift in the deterministic suites is noticed.
+on:
+  workflow_dispatch:
+    inputs:
+      quick:
+        description: "Reduced sizes (smoke test only; do not publish the numbers)"
+        type: boolean
+        default: false
+  schedule:
+    - cron: "0 6 * * 1"
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+    - name: Install ground-truth tools
+      run: sudo apt-get update && sudo apt-get install -y binutils file
+    - name: Build
+      run: dotnet build Whey.Benchmarks -c Release
+    - name: Run all suites
+      run: dotnet run --no-build -c Release --project Whey.Benchmarks -- all ${{ inputs.quick && '--quick' || '' }}
+    - name: Scheduler regression gate
+      run: dotnet run --no-build -c Release --project Whey.Benchmarks -- sim --check ${{ inputs.quick && '--quick' || '' }} --out "${{ runner.temp }}/gate"
+    - uses: actions/upload-artifact@v4
+      with:
+        name: bench-results
+        path: bench/results
